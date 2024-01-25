@@ -5,6 +5,8 @@ import static fr.free.nrw.commons.Utils.handleWebUrl;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -41,9 +44,16 @@ import fr.free.nrw.commons.utils.DownloadUtils;
 import fr.free.nrw.commons.utils.ImageUtils;
 import fr.free.nrw.commons.utils.NetworkUtils;
 import fr.free.nrw.commons.utils.ViewUtil;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -60,7 +70,7 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
     private static CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @BindView(R.id.mediaDetailsPager) ViewPager pager;
-    private Boolean editable;
+    private boolean editable;
     private boolean isFeaturedImage;
     private boolean isWikipediaButtonDisplayed;
     MediaDetailAdapter adapter;
@@ -78,24 +88,30 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
         return removedItems;
     }
 
+
+    /**
+     * Use this factory method to create a new instance of this fragment using the provided
+     * parameters.
+     * 
+     * This method will create a new instance of MediaDetailPagerFragment and the arguments will be
+     * saved to a bundle which will be later available in the {@link #onCreate(Bundle)}
+     * @param editable
+     * @param isFeaturedImage
+     * @return
+     */
+    public static MediaDetailPagerFragment newInstance(boolean editable, boolean isFeaturedImage) {
+        MediaDetailPagerFragment mediaDetailPagerFragment = new MediaDetailPagerFragment();
+        Bundle args = new Bundle();
+        args.putBoolean("is_editable", editable);
+        args.putBoolean("is_featured_image", isFeaturedImage);
+        mediaDetailPagerFragment.setArguments(args);
+        return mediaDetailPagerFragment;
+    }
+
     public MediaDetailPagerFragment() {
-        this(false, false);
-    }
-
-    @SuppressLint("ValidFragment")
-    public MediaDetailPagerFragment(Boolean editable, boolean isFeaturedImage) {
-        this.editable = editable;
-        this.isFeaturedImage = isFeaturedImage;
-        isFromFeaturedRootFragment = false;
-    }
-
-    @SuppressLint("ValidFragment")
-    public MediaDetailPagerFragment(Boolean editable, boolean isFeaturedImage, int position) {
-        this.editable = editable;
-        this.isFeaturedImage = isFeaturedImage;
-        isFromFeaturedRootFragment = true;
-        this.position = position;
-    }
+        // Required empty public constructor
+    };
+   
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -107,16 +123,23 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
 
         adapter = new MediaDetailAdapter(getChildFragmentManager());
 
-        if (getActivity() != null) {
-            final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
+        // ActionBar is now supported in both activities - if this crashes something is quite wrong
+        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        else {
+            throw new AssertionError("Action bar should not be null!");
         }
 
         // If fragment is associated with ProfileActivity, then hide the tabLayout
         if (getActivity() instanceof ProfileActivity) {
             ((ProfileActivity)getActivity()).tabLayout.setVisibility(View.GONE);
+        }
+
+        // Else if fragment is associated with MainActivity then hide that tab layout
+        else if (getActivity() instanceof MainActivity) {
+            ((MainActivity)getActivity()).hideTabs();
         }
 
         pager.setAdapter(adapter);
@@ -127,9 +150,7 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
             getActivity().invalidateOptionsMenu();
         }
         adapter.notifyDataSetChanged();
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity)getActivity()).hideTabs();
-        }
+
         return view;
     }
 
@@ -145,8 +166,11 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            editable = savedInstanceState.getBoolean("editable");
-            isFeaturedImage = savedInstanceState.getBoolean("isFeaturedImage");
+            editable = savedInstanceState.getBoolean("editable", false);
+            isFeaturedImage = savedInstanceState.getBoolean("isFeaturedImage", false);
+            if(null != pager) {
+                pager.setCurrentItem(savedInstanceState.getInt("current-page", 0), false);
+            }
         }
         setHasOptionsMenu(true);
         initProvider();
@@ -176,6 +200,7 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
         }
 
         Media m = provider.getMediaAtPosition(pager.getCurrentItem());
+        MediaDetailFragment mediaDetailFragment = this.adapter.getCurrentMediaDetailFragment();
         switch (item.getItemId()) {
             case R.id.menu_bookmark_current_image:
                 boolean bookmarkExists = bookmarkDao.updateBookmark(bookmark);
@@ -229,6 +254,16 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
                 return true;
             case R.id.menu_view_report:
                 showReportDialog(m);
+            case R.id.menu_view_set_white_background:
+                if (mediaDetailFragment != null) {
+                    mediaDetailFragment.onImageBackgroundChanged(ContextCompat.getColor(getContext(), R.color.white));
+                }
+                return true;
+            case R.id.menu_view_set_black_background:
+                if (mediaDetailFragment != null) {
+                    mediaDetailFragment.onImageBackgroundChanged(ContextCompat.getColor(getContext(), R.color.black));
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -358,6 +393,17 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
                     if (m.getUser() != null) {
                         menu.findItem(R.id.menu_view_user_page).setEnabled(true).setVisible(true);
                     }
+
+                    try {
+                        URL mediaUrl = new URL(m.getImageUrl());
+                        this.handleBackgroundColorMenuItems(
+                            () -> BitmapFactory.decodeStream(mediaUrl.openConnection().getInputStream()),
+                            menu
+                        );
+                    } catch (Exception e) {
+                        Timber.e("Cant detect media transparency");
+                    }
+                    
                     // Initialize bookmark object
                     bookmark = new Bookmark(
                             m.getFilename(),
@@ -406,6 +452,25 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
 
             }
         }
+    }
+
+    /**
+     * Decide wether or not we should display the background color menu items
+     * We display them if the image is transparent
+     * @param getBitmap
+     * @param menu
+     */
+    private void handleBackgroundColorMenuItems(Callable<Bitmap> getBitmap, Menu menu) {
+        Observable.fromCallable(
+                getBitmap
+            ).subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(image -> {
+                if (image.hasAlpha()) {
+                    menu.findItem(R.id.menu_view_set_white_background).setVisible(true).setEnabled(true);
+                    menu.findItem(R.id.menu_view_set_black_background).setVisible(true).setEnabled(true);
+                }
+            });
     }
 
     private void updateBookmarkState(MenuItem item) {
@@ -551,6 +616,18 @@ public class MediaDetailPagerFragment extends CommonsDaggerSupportFragment imple
          */
         public Fragment getCurrentFragment() {
             return mCurrentFragment;
+        }
+
+        /**
+         * If current fragment is of type MediaDetailFragment, return it, otherwise return null.
+         * @return MediaDetailFragment
+         */
+        public MediaDetailFragment getCurrentMediaDetailFragment() {
+            if (mCurrentFragment instanceof MediaDetailFragment) {
+                return (MediaDetailFragment) mCurrentFragment;
+            }
+
+            return null;
         }
 
         /**

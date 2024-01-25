@@ -1,5 +1,49 @@
 # Wikimedia Commons for Android
 
+## v4.2.1
+
+- Provide the ability to edit an image to losslessly rotate it while uploading
+- Fix a bug in v4.2.0 where the nearby places were not loading
+- Fix a bug where editing depictions was showing a progress bar indefinitely
+- In the upload screen, use different map icons to indicate if image is being uploaded with location
+  metadata
+- For nearby uploads, it is no longer possible to deselect the item's category and depiction
+- The Mapbox account key used by the app has been changed
+- Category search now shows exact matches without any discrepancies
+- Various bug and crash fixes
+
+## v4.2.0
+- Dark mode colour improvements
+- Enhancements done to address location metadata loss including the metadata loss that occurs in
+  latest Android versions
+- Enhancements done to address the issue where uploads get stuck in queued state
+- Fix the inability to upload via the in-app camera option
+- Provide the ability to optionally include location metadata for in-app camera uploads in case the
+  device camera app does not provide location metadata
+- Use geo location URL that works consistently across all map applications
+- Fix crash when clicking on location target icon while trying to edit the location of an upload
+- Fix crash that occurs randomly while returning to the app after leaving it in the background
+- Fix crash in Sign up activity on Android version 5.0 and 5.1
+- Android 13 compatibility changes
+
+## v4.1.0
+- Location of pictures uploaded via custom picture selector are now recognized
+- Improvements to the custom picture selector
+- Ensure the WLM pictures are associated with the correct templates for each year
+- Only show pictures uploaded via app in peer review
+- Improve the variety of images show in peer review
+- Allow going to current location in location edit dialog while uploading a picture
+- Switch to using MapLibre instead of Mapbox and thereby disable telemetry sent to Mapbox
+- Fixed various bugs
+
+## v4.0.5
+- Bumped min SDK to 29 to try and solve Google policy issue
+- Reverted dialog
+- Note: This encompasses versions 1031, 1032, and 1033, due to the Play Store's requirements to overwrite all the tracks with a post-fix version (otherwise no single track can be published)
+
+## v4.0.4
+- Added dialog for Google's location policy
+
 ## v4.0.3
 - Added "Report" button for Google UGC policy
 

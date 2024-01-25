@@ -72,7 +72,9 @@ class UploadMediaDetailFragmentUnitTest {
     private lateinit var btnNext: AppCompatButton
     private lateinit var btnCopyToSubsequentMedia: AppCompatButton
     private lateinit var photoViewBackgroundImage: PhotoView
-    private lateinit var ibMap: AppCompatImageButton
+    private lateinit var locationStatusLl: LinearLayout
+    private lateinit var locationImageView : ImageView
+    private lateinit var locationTextView : TextView
     private lateinit var llContainerMediaDetail: LinearLayout
     private lateinit var ibExpandCollapse: AppCompatImageButton
 
@@ -98,6 +100,9 @@ class UploadMediaDetailFragmentUnitTest {
     private lateinit var place: Place
 
     @Mock
+    private var location: fr.free.nrw.commons.location.LatLng? = null
+
+    @Mock
     private lateinit var defaultKvStore: JsonKvStore
 
     @Mock
@@ -107,7 +112,7 @@ class UploadMediaDetailFragmentUnitTest {
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
 
         context = ApplicationProvider.getApplicationContext()
         AppAdapter.set(TestAppAdapter())
@@ -131,7 +136,9 @@ class UploadMediaDetailFragmentUnitTest {
         btnNext = view.findViewById(R.id.btn_next)
         btnCopyToSubsequentMedia = view.findViewById(R.id.btn_copy_subsequent_media)
         photoViewBackgroundImage = view.findViewById(R.id.backgroundImage)
-        ibMap = view.findViewById(R.id.ib_map)
+        locationStatusLl = view.findViewById(R.id.ll_location_status)
+        locationImageView = view.findViewById(R.id.location_image_view)
+        locationTextView = view.findViewById(R.id.location_text_view)
         llContainerMediaDetail = view.findViewById(R.id.ll_container_media_detail)
         ibExpandCollapse = view.findViewById(R.id.ib_expand_collapse)
 
@@ -144,7 +151,9 @@ class UploadMediaDetailFragmentUnitTest {
         Whitebox.setInternalState(fragment, "btnCopyToSubsequentMedia", btnCopyToSubsequentMedia)
         Whitebox.setInternalState(fragment, "photoViewBackgroundImage", photoViewBackgroundImage)
         Whitebox.setInternalState(fragment, "uploadMediaDetailAdapter", uploadMediaDetailAdapter)
-        Whitebox.setInternalState(fragment, "ibMap", ibMap)
+        Whitebox.setInternalState(fragment, "llLocationStatus", locationStatusLl)
+        Whitebox.setInternalState(fragment, "locationImageView", locationImageView)
+        Whitebox.setInternalState(fragment, "locationTextView", locationTextView)
         Whitebox.setInternalState(fragment, "llContainerMediaDetail", llContainerMediaDetail)
         Whitebox.setInternalState(fragment, "ibExpandCollapse", ibExpandCollapse)
     }
@@ -172,7 +181,7 @@ class UploadMediaDetailFragmentUnitTest {
     @Throws(Exception::class)
     fun testSetImageTobeUploaded() {
         Shadows.shadowOf(Looper.getMainLooper()).idle()
-        fragment.setImageTobeUploaded(null, null)
+        fragment.setImageTobeUploaded(null, null, location)
     }
 
     @Test
@@ -240,13 +249,6 @@ class UploadMediaDetailFragmentUnitTest {
         Shadows.shadowOf(Looper.getMainLooper()).idle()
         Whitebox.setInternalState(fragment, "presenter", presenter)
         fragment.onPreviousButtonClicked()
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun testOnButtonAddDescriptionClicked() {
-        Shadows.shadowOf(Looper.getMainLooper()).idle()
-        fragment.onButtonAddDescriptionClicked()
     }
 
     @Test
@@ -374,7 +376,7 @@ class UploadMediaDetailFragmentUnitTest {
         `when`(latLng.longitude).thenReturn(0.0)
         `when`(uploadItem.gpsCoords).thenReturn(imageCoordinates)
         fragment.onActivityResult(1211, Activity.RESULT_OK, intent)
-        Mockito.verify(presenter, Mockito.times(0)).verifyImageQuality(0)
+        Mockito.verify(presenter, Mockito.times(0)).verifyImageQuality(0, location)
     }
 
     @Test
@@ -396,7 +398,7 @@ class UploadMediaDetailFragmentUnitTest {
         `when`(latLng.longitude).thenReturn(0.0)
         `when`(uploadItem.gpsCoords).thenReturn(imageCoordinates)
         fragment.onActivityResult(1211, Activity.RESULT_OK, intent)
-        Mockito.verify(presenter, Mockito.times(1)).verifyImageQuality(0)
+        Mockito.verify(presenter, Mockito.times(1)).verifyImageQuality(0, null)
     }
 
     @Test
@@ -426,9 +428,9 @@ class UploadMediaDetailFragmentUnitTest {
 
     @Test
     @Throws(Exception::class)
-    fun testOnRlContainerTitleClicked() {
+    fun testOnLlContainerTitleClicked() {
         Shadows.shadowOf(Looper.getMainLooper()).idle()
-        fragment.onRlContainerTitleClicked()
+        fragment.onLlContainerTitleClicked()
     }
 
     @Test

@@ -9,6 +9,7 @@
 * FF-11
 * FF11
 * Ferdinand0101
+* Icke
 * Inkowik
 * Justman10000
 * Kghbln
@@ -18,11 +19,15 @@
 * Nekky-chan
 * Ngschaider
 * Pyscowicz
+* Reedy
+* Sebastian Wallroth
+* SpaceEnergy
 * Sujan
 * Sushi
 * Tacsipacsi
 * ThisCarthing
 * Tobi 406
+* Twistqj
 * Ubahnverleih
 * Umherirrender
 * Umlaut
@@ -90,6 +95,7 @@
   <string name="bullet">•</string>
   <string name="menu_settings">Einstellungen</string>
   <string name="intent_share_upload_label">Zu Commons hochladen</string>
+  <string name="upload_in_progress">Hochladen läuft</string>
   <string name="username">Benutzername</string>
   <string name="password">Passwort</string>
   <string name="login_credential">Bei deinem Commons-Beta-Benutzerkonto anmelden</string>
@@ -103,6 +109,9 @@
   <string name="login_success">Anmeldung erfolgreich!</string>
   <string name="login_failed">Anmeldung fehlgeschlagen!</string>
   <string name="upload_failed">Datei nicht gefunden. Bitte versuche es mit einer anderen Datei.</string>
+  <string name="retry_limit_reached">Maximales Wiederholungslimit erreicht! Bitte brich den Upload ab und versuche es erneut</string>
+  <string name="unrestricted_battery_mode">Batterieoptimierung ausschalten?</string>
+  <string name="suggest_unrestricted_mode">Das Hochladen von mehr als 3 Bildern funktioniert zuverlässiger, wenn die Batterieoptimierung ausgeschaltet ist. Bitte schalten Sie die Batterieoptimierung für die Commons-App in den Einstellungen aus, um ein reibungsloses Upload-Erlebnis zu gewährleisten. \n\nMögliche Schritte zum Ausschalten der Batterieoptimierung:\n\nSchritt 1: Tippen Sie unten auf die Schaltfläche „Einstellungen“.\n\nSchritt 2: Wechseln Sie von „Nicht optimiert“ zu „Alle“. apps‘.\n\nSchritt 3: Suchen Sie nach „Commons“ oder „fr.free.nrw.commons“.\n\nSchritt 4: Tippen Sie darauf und wählen Sie „Nicht optimieren“.\n\nSchritt 5: Klicken Sie auf „Fertig“.</string>
   <string name="authentication_failed">Authentifizierung fehlgeschlagen. Bitte erneut anmelden.</string>
   <string name="uploading_started">Hochladen gestartet!</string>
   <string name="uploading_queued">Hochladen in Warteschlange (eingeschränkter Verbindungsmodus aktiviert)</string>
@@ -217,9 +226,11 @@
   <string name="read_storage_permission_rationale">Erforderliche Berechtigung: Externen Speicher lesen. Die App kann ohne diese Berechtigung nicht auf deine Galerie zugreifen.</string>
   <string name="write_storage_permission_rationale">Erforderliche Berechtigung: Externen Speicher beschreiben. Die App kann ohne diese Berechtigung nicht auf deine Kamera oder Galerie zugreifen.</string>
   <string name="location_permission_title">Anfordern der Standortfreigabe</string>
+  <string name="in_app_camera_location_permission_title">Zeichnen Sie den Standort für In-App-Aufnahmen auf</string>
+  <string name="in_app_camera_location_switch_pref_summary">Aktivieren Sie diese Option, um den Standort mit In-App-Aufnahmen aufzuzeichnen, falls die Kamera des Geräts ihn nicht aufzeichnet</string>
   <string name="ok">Okay</string>
   <string name="warning">Warnung</string>
-  <string name="duplicate_image_found">Doppeltes Bild gefunden</string>
+  <string name="duplicate_file_name">Duplizierter Dateiname gefunden</string>
   <string name="upload">Hochladen</string>
   <string name="yes">Ja</string>
   <string name="no">Nein</string>
@@ -295,6 +306,7 @@
   <string name="copy_wikicode">Den Wikitext in die Zwischenablage kopieren</string>
   <string name="wikicode_copied">Der Wikitext wurde in die Zwischenablage kopiert</string>
   <string name="nearby_location_not_available">„In der Nähe“ arbeiten möglicherwiese nicht richtig. Der Standort ist nicht verfügbar.</string>
+  <string name="upload_location_access_denied">Standortzugriff verweigert. Bitte legen Sie Ihren Standort manuell fest, um diese Funktion nutzen zu können.</string>
   <string name="location_permission_rationale_nearby">Berechtigung zur Anzeige einer Liste mit Orten in der Nähe erforderlich</string>
   <string name="nearby_directions">Richtungen</string>
   <string name="nearby_wikidata">Wikidata</string>
@@ -362,6 +374,7 @@
   <string name="wrong">Falsche Antwort</string>
   <string name="quiz_screenshot_question">Darf dieses Bildschirmfoto hochgeladen werden?</string>
   <string name="share_app_title">App teilen</string>
+  <string name="rotate">Drehen</string>
   <string name="error_fetching_nearby_places">Fehler beim Abrufen der Orte in der Nähe.</string>
   <string name="no_nearby_places_around">Keine Orte in der Nähe gefunden</string>
   <string name="error_fetching_nearby_monuments">Fehler beim Abrufen von Denkmälern in der Nähe.</string>
@@ -425,7 +438,7 @@
   <string name="no_categories_selected">Keine Kategorien ausgewählt</string>
   <string name="no_categories_selected_warning_desc">Bilder ohne Kategorien sind selten nutzbar. Bist du sicher, dass du ohne die Auswahl von Kategorien hochladen möchtest?</string>
   <string name="no_depictions_selected">Keine Motive ausgewählt</string>
-  <string name="no_depictions_selected_warning_desc">Bilder mit Motive sind leichter zu finden und werden eher verwendet. Bist dusicher, dass du ohne Auswahl von Motiven fortfahren möchtest?</string>
+  <string name="no_depictions_selected_warning_desc">Bilder mit Motive sind leichter zu finden und werden eher verwendet. Bist du sicher, dass du ohne Auswahl von Motiven fortfahren möchtest?</string>
   <string name="back_button_warning">Hochladen abbrechen</string>
   <string name="back_button_warning_desc">Wenn du den Zurück-Button verwendest, wird das Hochladen abgebrochen und du verlierst deine bisherigen Schritte</string>
   <string name="back_button_continue">Hochladen fortsetzen</string>
@@ -442,6 +455,16 @@
   <string name="ends_on">Endet am:</string>
   <string name="display_campaigns">Kampagnen anzeigen</string>
   <string name="display_campaigns_explanation">Die laufenden Kampagnen ansehen</string>
+  <string name="in_app_camera_location_access_explanation">Erlauben Sie der App, den Standort abzurufen, falls die Kamera ihn nicht aufzeichnet. Einige Gerätekameras zeichnen den Standort nicht auf. In solchen Fällen wird Ihr Beitrag nützlicher, wenn Sie die App den Standort abrufen und anhängen lassen. Sie können dies jederzeit in den Einstellungen ändern</string>
+  <string name="option_allow">Erlauben</string>
+  <string name="option_dismiss">Ablehnen</string>
+  <string name="in_app_camera_needs_location">Bitte aktivieren Sie den Standortzugriff in den Einstellungen und versuchen Sie es erneut. \n\nHinweis: Der Upload enthält möglicherweise keinen Standort, wenn die App den Standort nicht innerhalb eines kurzen Zeitraums vom Gerät abrufen kann.</string>
+  <string name="in_app_camera_location_permission_rationale">Die In-App-Kamera benötigt eine Standortberechtigung, um sie an Ihre Bilder anzuhängen, falls der Standort nicht in EXIF verfügbar ist. Bitte erlauben Sie der App, auf Ihren Standort zuzugreifen, und versuchen Sie es erneut.\n\nHinweis: Der Upload enthält möglicherweise keinen Standort, wenn die App den Standort nicht innerhalb eines kurzen Zeitraums vom Gerät abrufen kann.</string>
+  <string name="in_app_camera_location_permission_denied">Aufgrund fehlender Standortberechtigung konnte die App den Standort nicht zusammen mit In-Shots aufzeichnen</string>
+  <string name="in_app_camera_location_unavailable">Die App zeichnet den Standort nicht zusammen mit In-Shots auf, da das GPS ausgeschaltet ist</string>
+  <string name="open_document_photo_picker_title">Verwenden Sie die dokumentbasierte Fotoauswahl</string>
+  <string name="open_document_photo_picker_explanation">Bei der neuen Android-Fotoauswahl besteht die Gefahr, dass Standortinformationen verloren gehen. Aktivieren Sie diese Option, wenn Sie sie anscheinend verwenden.</string>
+  <string name="location_loss_warning">Wenn Sie dies deaktivieren, wird möglicherweise die neue Android-Fotoauswahl aktiviert. Es besteht die Gefahr, dass Standortinformationen verloren gehen.\n\nTippen Sie auf „Weitere Informationen“, um weitere Informationen zu erhalten.</string>
   <string name="nearby_campaign_dismiss_message">Du wirst die Kampagnen nicht mehr sehen. Du kannst dennoch diese Benachrichtigung in den Einstellungen erneut aktivieren, falls du dies möchtest.</string>
   <string name="this_function_needs_network_connection">Diese Funktion erfordert eine Netzwerkverbindung. Bitte überprüfe deine Verbindungseinstellungen.</string>
   <string name="error_processing_image">Bei der Verarbeitung des Bildes ist ein Fehler aufgetreten. Bitte erneut versuchen!</string>
@@ -503,6 +526,8 @@
   <string name="exif_tag_name_lensModel">Kameralinse</string>
   <string name="exif_tag_name_serialNumbers">Seriennummer</string>
   <string name="exif_tag_name_software">Software</string>
+  <string name="media_location_permission_denied">Zugriff auf Medienstandort verweigert</string>
+  <string name="add_location_manually">Es kann sein, dass wir nicht in der Lage sind, automatisch Standortdaten von Bildern zu erhalten, die du hochlädst. Bitte füge den entsprechenden Ort für jedes Bild hinzu, bevor du es einreichst.</string>
   <string name="share_text">Lade Fotos direkt von deinem Telefon auf Wikimedia Commons hoch. Lade die Commons-App jetzt herunter: %1$s</string>
   <string name="share_via">App teilen über …</string>
   <string name="image_info">Bildinformationen</string>
@@ -524,6 +549,7 @@
   <string name="delete_helper_ask_reason_copyright_press_photo">Pressefoto</string>
   <string name="delete_helper_ask_reason_copyright_internet_photo">Bild aus dem Internet</string>
   <string name="delete_helper_ask_reason_copyright_logo">Logo</string>
+  <string name="delete_helper_ask_reason_copyright_no_freedom_of_panorama">Aussicht versperren</string>
   <string name="delete_helper_ask_alert_set_positive_button_reason">Denn es ist</string>
   <string name="category_edit_helper_make_edit_toast">Versuche, Kategorien zu aktualisieren.</string>
   <string name="category_edit_helper_show_edit_title">Kategorie-Update</string>
@@ -569,7 +595,7 @@
   <string name="title_for_child_classes">CHILD CLASSES</string>
   <string name="title_for_parent_classes">PARENT CLASSES</string>
   <string name="upload_nearby_place_found_title">Ort in der Nähe gefunden</string>
-  <string name="upload_nearby_place_found_description">Ist dies ein Foto vom Ort %1$s?</string>
+  <string name="upload_nearby_place_found_description">Ist das ein Foto von %1$s?</string>
   <string name="title_app_shortcut_bookmark">Lesezeichen</string>
   <string name="title_app_shortcut_setting">Einstellungen</string>
   <string name="remove_bookmark">aus den Lesezeichen entfernt</string>
@@ -584,6 +610,7 @@
   <string name="recommend_high_accuracy_mode">Die besten Ergebnisse erzielst du, wenn du den Modus „Hohe Genauigkeit“ wählst.</string>
   <string name="ask_to_turn_location_on">Standort einschalten?</string>
   <string name="nearby_needs_location">Für die Funktion „in der Nähe“ muss der Standort aktiviert sein, um richtig zu funktionieren</string>
+  <string name="upload_map_location_access">Sie müssen Zugriff auf Ihren aktuellen Standort gewähren, um den Standort automatisch festzulegen.</string>
   <string name="use_location_from_similar_image">Hast du diese beiden Bilder am selben Ort aufgenommen? Möchtest du den Breiten- und Längengrad des rechten Bildes verwenden?</string>
   <string name="load_more">Mehr laden</string>
   <string name="nearby_no_results">Keine Orte gefunden, versuche, deine Suchkriterien zu ändern.</string>
@@ -626,7 +653,6 @@
   <string name="leaderboard_nearby">In der Nähe</string>
   <string name="leaderboard_used">Verwendet</string>
   <string name="leaderboard_my_rank_button_text">Mein Rang</string>
-  <string name="map_attribution">&amp;#169; &lt;a href=\"https://www.mapbox.com/about/maps/\"&gt;Mapbox&lt;/a&gt; &amp;#169; &lt;a href=\"https://www.openstreetmap.org/copyright\"&gt;OpenStreetMap&lt;/a&gt; &lt;a href=\"https://www.mapbox.com/map-feedback/\"&gt;Verbessere diese Karte&lt;/a&gt;</string>
   <string name="limited_connection_enabled">Begrenzter Verbindungsmodus aktiviert!</string>
   <string name="limited_connection_disabled">Eingeschränkter Verbindungsmodus deaktiviert. Ausstehende Uploads werden jetzt fortgesetzt.</string>
   <string name="limited_connection_mode">Eingeschränkter Verbindungsmodus</string>
@@ -672,6 +698,8 @@
   <string name="custom_selector_info_text2">Im Gegensatz zum Bild auf der linken Seite ist das Bild auf der rechten Seite mit dem Commons-Logo versehen, das anzeigt, dass es bereits hochgeladen wurde. Für die Bildvorschau berühren und halten.</string>
   <string name="welcome_custom_selector_ok">Großartig</string>
   <string name="custom_selector_already_uploaded_image_text">Dieses Bild ist bereits auf Commons hochgeladen worden.</string>
+  <string name="custom_selector_over_limit_warning">Aus technischen Gründen kann die Anwendung nicht mehr als %1$d Bilder auf einmal verlässlich hochladen. Die Grenze für das Hochladen von %1$d wurde um %2$d überschritten.</string>
+  <string name="custom_selector_limit_error_desc">Fehler: Grenze für das Hochladen wurde überschritten</string>
   <string name="wlm_upload_info">Dieses Bild wird am Wettbewerb Wiki Loves Monuments teilnehmen</string>
   <string name="display_monuments">Denkmäler anzeigen</string>
   <string name="wlm_month_message">Es ist der Wiki Loves Monuments Monat!</string>
@@ -710,6 +738,8 @@
   <string name="your_feedback">Dein Feedback</string>
   <string name="mark_as_not_for_upload">Als nicht zum Hochladen markieren</string>
   <string name="unmark_as_not_for_upload">Markierung als nicht zum Hochladen aufheben</string>
+  <string name="marking_as_not_for_upload">Als nicht zum Hochladen markieren</string>
+  <string name="unmarking_as_not_for_upload">Markierung als nicht zum Hochladen aufheben</string>
   <string name="show_already_actioned_pictures">Bereits bearbeitete Bilder anzeigen</string>
   <string name="hiding_already_actioned_pictures">Ausblenden bereits bearbeiteter Bilder</string>
   <string name="no_more_images_found">Keine Bilder mehr gefunden</string>
@@ -725,4 +755,13 @@
   <string name="welcome_to_full_screen_mode_text">Willkommen im Vollbild-Auswahlmodus</string>
   <string name="full_screen_mode_zoom_info">Verwende zwei Finger, um hinein- und herauszuzoomen.</string>
   <string name="full_screen_mode_features_info">Wische schnell und lange, um diese Aktionen auszuführen:\n- Links/Rechts: Zum vorherigen/nächsten gehen\n- Nach oben: Auswählen\n- Nach unten: Als nicht zum Hochladen markieren.</string>
+  <string name="set_up_avatar_toast_string">Um deinen Bestenlisten Avatar einzustellen, klicke \"Set as avatar\" in dem Drei-Punkte-Menü bei jedem Bild.</string>
+  <string name="similar_coordinate_description_auto_set">Die Koordinaten sind nicht exakt genug, aber der Uploader dieses Bildes denkt, sie sind nah genug.</string>
+  <string name="storage_permissions_denied">Speicherberechtigungen verweigert</string>
+  <string name="unable_to_share_upload_item">Dieser Artikel kann nicht geteilt werden</string>
+  <string name="permissions_are_required_for_functionality">Für die Funktionalität sind Berechtigungen erforderlich</string>
+  <plurals name="custom_picker_images_selected_title_appendix">
+    <item quantity="one">%d Bild ausgewählt</item>
+    <item quantity="other"> %d Bilder ausgewählt</item>
+  </plurals>
 </resources>

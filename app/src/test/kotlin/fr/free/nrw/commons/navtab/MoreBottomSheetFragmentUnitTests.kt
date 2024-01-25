@@ -57,14 +57,11 @@ class MoreBottomSheetFragmentUnitTests {
     private lateinit var store: JsonKvStore
 
     @Mock
-    private lateinit var morePeerReview: TextView
-
-    @Mock
     private lateinit var pageEditClient: PageEditClient
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         context = ApplicationProvider.getApplicationContext()
         AppAdapter.set(TestAppAdapter())
 
@@ -76,7 +73,6 @@ class MoreBottomSheetFragmentUnitTests {
         fragmentTransaction.commitNowAllowingStateLoss()
 
         Whitebox.setInternalState(fragment, "store", store)
-        Whitebox.setInternalState(fragment, "morePeerReview", morePeerReview)
         Whitebox.setInternalState(fragment, "pageEditClient", pageEditClient)
 
         `when`(store.getBoolean(CommonsApplication.IS_LIMITED_CONNECTION_MODE_ENABLED)).thenReturn(

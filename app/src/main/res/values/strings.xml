@@ -62,6 +62,7 @@
   <string name="bullet">&#8226;</string>
   <string name="menu_settings">Settings</string>
   <string name="intent_share_upload_label">Upload to Commons</string>
+  <string name="upload_in_progress">Upload in progress</string>
   <string name="username">Username</string>
   <string name="password">Password</string>
   <string name="login_credential">Log in to your Commons Beta account</string>
@@ -75,6 +76,9 @@
   <string name="login_success">Login success!</string>
   <string name="login_failed">Login failed!</string>
   <string name="upload_failed">File not found. Please try another file.</string>
+  <string name="retry_limit_reached">Maximum retry limit reached! Please cancel the upload and try again</string>
+  <string name="unrestricted_battery_mode">Turn battery optimization off?</string>
+  <string name="suggest_unrestricted_mode">Uploading more than 3 images works more reliably when the battery optimization is turned off. Please turn battery optimization off for the Commons app from the settings for a smooth upload experience. \n\nPossible steps to turn battery optimization off:\n\nStep 1: Tap on the \'Settings\' button below.\n\nStep 2: Switch from \'Not optimized\' to \'All apps\'.\n\nStep 3: Search for \"Commons\" or \"fr.free.nrw.commons\".\n\nStep 4: Tap it and select \'Don\'t optimize\'.\n\nStep 5: Press \'Done\'.</string>
   <string name="authentication_failed">Authentication failed, please login again</string>
   <string name="uploading_started">Upload started!</string>
   <string name="uploading_queued">Upload queued (limited connection mode enabled)</string>
@@ -190,9 +194,11 @@
   <string name="read_storage_permission_rationale">Required permission: Read external storage. App cannot access your gallery without this.</string>
   <string name="write_storage_permission_rationale">Required permission: Write external storage. App cannot access your camera/gallery without this.</string>
   <string name="location_permission_title">Requesting Location Permission</string>
+  <string name="in_app_camera_location_permission_title">Record location for in-app shots</string>
+  <string name="in_app_camera_location_switch_pref_summary">Enable this to record location with in-app shots in case the device camera does not record it</string>
   <string name="ok">OK</string>
   <string name="warning">Warning</string>
-  <string name="duplicate_image_found">Duplicate Image Found</string>
+  <string name="duplicate_file_name">Duplicate File Name found</string>
   <string name="upload">Upload</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
@@ -209,7 +215,6 @@
   <string name="become_a_tester_title">Become a Beta Tester</string>
   <string name="become_a_tester_description">Opt-in to our beta channel on Google Play and get early access to new features and bug fixes</string>
   <string name="beta_opt_in_link">https://play.google.com/apps/testing/fr.free.nrw.commons</string>
-  <string name="mapbox_commons_app_token">pk.eyJ1IjoibWFza2FyYXZpdmVrIiwiYSI6ImNqMmxvdzFjMTAwMHYzM283ZWM3eW5tcDAifQ.ib5SZ9EVjwJe6GSKve0bcg</string>
   <string name="_2fa_code">2FA Code</string>
   <string name="logout_verification">Do you really want to logout?</string>
   <string name="mediaimage_failed">Media Image Failed</string>
@@ -274,6 +279,7 @@
   <string name="copy_wikicode">Copy the wikitext to the clipboard</string>
   <string name="wikicode_copied">The wikitext was copied to the clipboard</string>
   <string name="nearby_location_not_available">Nearby might not work properly, Location not available.</string>
+  <string name="upload_location_access_denied">Location access denied. Please set your location manually to use this feature.</string>
   <string name="location_permission_rationale_nearby">Permission required to display a list of nearby places</string>
 
   <string name="nearby_directions">Directions</string>
@@ -346,6 +352,7 @@
   <string name="wrong">Wrong Answer</string>
   <string name="quiz_screenshot_question">Is this screenshot OK to upload?</string>
   <string name="share_app_title">Share App</string>
+  <string name="rotate">Rotate</string>
 
   <string name="error_fetching_nearby_places">Error fetching nearby places.</string>
   <string name="no_nearby_places_around">No nearby places around</string>
@@ -440,6 +447,16 @@ Upload your first media by tapping on the add button.</string>
   <string name="ends_on">Ends on:</string>
   <string name="display_campaigns">Display campaigns</string>
   <string name="display_campaigns_explanation">See the ongoing campaigns</string>
+  <string name="in_app_camera_location_access_explanation">Allow the app to fetch location in case the camera does not record it. Some device cameras do not record location. In such cases, letting the app fetch and attach location to it makes your contribution more useful. You may change this any time from the Settings</string>
+  <string name="option_allow">Allow</string>
+  <string name="option_dismiss">Dismiss</string>
+  <string name="in_app_camera_needs_location">Please turn on location access from the Settings and try again. \n\nNote: The upload may not have location if app is unable to retrieve location from device within a short interval.</string>
+  <string name="in_app_camera_location_permission_rationale">In-app camera needs location permission to attach it to your images in case location is not available in EXIF. Please allow the app to access your location and try again.\n\nNote: The upload may not have location if app is unable to retrieve location from device within a short interval.</string>
+  <string name="in_app_camera_location_permission_denied">The app would not record location along with in-shots due to lack of location permission</string>
+  <string name="in_app_camera_location_unavailable">The app would not record location along with in-shots as the GPS is turned off</string>
+  <string name="open_document_photo_picker_title">Use document based photo picker</string>
+  <string name="open_document_photo_picker_explanation">The new Android photo picker risks losing location information. Enable if you seem to be using it.</string>
+  <string name="location_loss_warning">Turning this off could trigger the new Android photo picker. It risks losing location information.\n\nTap on \'Read more\' for more information.</string>
 
   <string name="nearby_campaign_dismiss_message">You won\'t see the campaigns anymore. However, you can re-enable this notification in Settings if you wish.</string>
   <string name="this_function_needs_network_connection">This function requires network connection, please check your connection settings.</string>
@@ -510,6 +527,9 @@ Upload your first media by tapping on the add button.</string>
   <string name="exif_tag_name_lensModel">Lens Model</string>
   <string name="exif_tag_name_serialNumbers">Serial Numbers</string>
   <string name="exif_tag_name_software">Software</string>
+
+  <string name="media_location_permission_denied">Media location access denied</string>
+  <string name="add_location_manually">We may not be able to automatically obtain location data from pictures you upload. Please add the appropriate location for each picture before submitting</string>
 
   <string name="share_text">Upload photos to Wikimedia Commons directly from your phone. Download the Commons App now: %1$s</string>
   <string name="share_via">Share app via...</string>
@@ -585,7 +605,7 @@ Upload your first media by tapping on the add button.</string>
   <string name="title_for_parent_classes">PARENT CLASSES</string>
 
   <string name="upload_nearby_place_found_title">Nearby Place Found</string>
-  <string name="upload_nearby_place_found_description">Is this a photo of Place %1$s?</string>
+  <string name="upload_nearby_place_found_description">Is this a photo of %1$s?</string>
   <string name="title_app_shortcut_bookmark">Bookmarks</string>
   <string name="title_app_shortcut_setting">Settings</string>
   <string name="remove_bookmark">Removed from bookmarks</string>
@@ -601,6 +621,7 @@ Upload your first media by tapping on the add button.</string>
   <string name="recommend_high_accuracy_mode">For best results, choose the High Accuracy mode.</string>
   <string name="ask_to_turn_location_on">Turn on location?</string>
   <string name="nearby_needs_location">Nearby needs location enabled to work properly</string>
+  <string name="upload_map_location_access">You need to give access to your current location to set location automatically.</string>
   <string name="use_location_from_similar_image">Did you shoot these two pictures at the same place? Do you want to use the latitude/longitude of the picture on the right?</string>
   <string name="load_more">Load More</string>
   <string name="nearby_no_results">No places found, try changing your search criteria.</string>
@@ -645,7 +666,7 @@ Upload your first media by tapping on the add button.</string>
   <string name="leaderboard_nearby">Nearby</string>
   <string name="leaderboard_used">Used</string>
   <string name="leaderboard_my_rank_button_text">My Rank</string>
-  <string name="map_attribution" translatable="false"><![CDATA[&#169; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &#169; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> <a href="https://www.mapbox.com/map-feedback/">Improve this map</a>]]></string>
+  <string name="map_attribution" translatable="false"><![CDATA[&#169; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>]]></string>
   <string name="limited_connection_enabled">Limited connection mode enabled!</string>
   <string name="limited_connection_disabled">Limited connection mode disabled. Pending uploads will resume now.</string>
   <string name="limited_connection_mode">Limited Connection Mode</string>
@@ -693,6 +714,10 @@ Upload your first media by tapping on the add button.</string>
   <string name="custom_selector_info_text2">Unlike the picture on the left, the picture on the right has the Commons logo indicating it is already uploaded. \n Touch and hold for image preview.</string>
   <string name="welcome_custom_selector_ok">Awesome</string>
   <string name="custom_selector_already_uploaded_image_text">This image has already been uploaded to Commons.</string>
+  <string name="custom_selector_over_limit_warning">For technical reasons, the app can\'t reliably upload more than %1$d pictures at once. The upload limit of %1$d has been exceeded by %2$d.</string>
+  <string name="custom_selector_dismiss_limit_warning_button_text">Dismiss</string>
+  <string name="custom_selector_button_limit_text">Max: %1$d</string>
+  <string name="custom_selector_limit_error_desc">Error: Upload Limit Exceeded</string>
   <string name="place_state_wlm">WLM</string>
   <string name="wlm_upload_info">This image will be entered into the Wiki Loves Monuments contest</string>
   <string name="display_monuments">Display monuments</string>
@@ -734,6 +759,8 @@ Upload your first media by tapping on the add button.</string>
   <string name="your_feedback">Your feedback</string>
   <string name="mark_as_not_for_upload">Mark as not for upload</string>
   <string name="unmark_as_not_for_upload">Unmark as not for upload</string>
+  <string name="marking_as_not_for_upload">Marking as not for upload</string>
+  <string name="unmarking_as_not_for_upload">Unmarking as not for upload</string>
   <string name="show_already_actioned_pictures">Show already actioned pictures</string>
   <string name="hiding_already_actioned_pictures">Hiding already actioned pictures</string>
   <string name="no_more_images_found">No more images found</string>
@@ -742,6 +769,8 @@ Upload your first media by tapping on the add button.</string>
   <string name="image_selected">Image selected</string>
   <string name="image_marked_as_not_for_upload">Image marked as not for upload</string>
   <string name="menu_view_report">Report</string>
+  <string name="menu_view_set_white_background">Set white background</string>
+  <string name="menu_view_set_black_background">Set black background</string>
   <string name="report_violation">Report violation</string>
   <string name="report_user">Report this user</string>
   <string name="report_content">Report this content</string>
@@ -750,4 +779,19 @@ Upload your first media by tapping on the add button.</string>
   <string name="full_screen_mode_zoom_info">Use two fingers to zoom in and out.</string>
   <string name="full_screen_mode_features_info">Swipe fast and long to perform these actions: \n- Left/Right: Go to previous/next \n- Up: Select\n- Down: Mark as not for upload.</string>
   <string name="set_up_avatar_toast_string">To set up your leaderboard avatar, tap \"Set as avatar\" in the three-dots menu of any image.</string>
+  <string name="similar_coordinate_description_auto_set">The coordinates are not the exact coordinates, but the person who uploaded this picture thinks they are close enough.</string>
+  <string name="storage_permissions_denied">Storage Permissions Denied</string>
+  <string name="unable_to_share_upload_item">Unable to share this item</string>
+  <string name="permissions_are_required_for_functionality">Permissions are required for functionality</string>
+  <string name="learn_how_to_write_a_useful_description">Learn how to write a useful description</string>
+  <string name="learn_how_to_write_a_useful_caption">Learn how to write a useful caption</string>
+  <string name="see_your_achievements">See your achievements</string>
+  <string name="edit_image">Edit Image</string>
+  <string name="edit_location">Edit Location</string>
+  <string name="send_thanks_to_author">Thank the author</string>
+  <string name="error_sending_thanks">Error sending thanks to author.</string>
+  <plurals name="custom_picker_images_selected_title_appendix">
+    <item quantity="one">%d image selected</item>
+    <item quantity="other">%d images selected</item>
+  </plurals>
 </resources>

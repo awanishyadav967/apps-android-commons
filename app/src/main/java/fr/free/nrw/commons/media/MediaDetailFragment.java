@@ -12,16 +12,17 @@ import static fr.free.nrw.commons.description.EditDescriptionConstants.WIKITEXT;
 import static fr.free.nrw.commons.upload.mediaDetails.UploadMediaDetailFragment.LAST_LOCATION;
 import static fr.free.nrw.commons.utils.LangCodeUtils.getLocalizedResources;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -57,11 +58,13 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import fr.free.nrw.commons.BuildConfig;
 import fr.free.nrw.commons.LocationPicker.LocationPicker;
 import fr.free.nrw.commons.Media;
 import fr.free.nrw.commons.MediaDataExtractor;
 import fr.free.nrw.commons.R;
 import fr.free.nrw.commons.Utils;
+import fr.free.nrw.commons.actions.ThanksClient;
 import fr.free.nrw.commons.auth.AccountUtil;
 import fr.free.nrw.commons.auth.SessionManager;
 import fr.free.nrw.commons.category.CategoryClient;
@@ -73,11 +76,15 @@ import fr.free.nrw.commons.delete.DeleteHelper;
 import fr.free.nrw.commons.delete.ReasonBuilder;
 import fr.free.nrw.commons.description.DescriptionEditActivity;
 import fr.free.nrw.commons.description.DescriptionEditHelper;
+import fr.free.nrw.commons.di.ApplicationlessInjection;
 import fr.free.nrw.commons.di.CommonsDaggerSupportFragment;
 import fr.free.nrw.commons.explore.depictions.WikidataItemDetailsActivity;
 import fr.free.nrw.commons.kvstore.JsonKvStore;
 import fr.free.nrw.commons.location.LocationServiceManager;
+import fr.free.nrw.commons.media.ZoomableActivity.ZoomableActivityConstants;
 import fr.free.nrw.commons.profile.ProfileActivity;
+import fr.free.nrw.commons.review.ReviewController;
+import fr.free.nrw.commons.review.ReviewHelper;
 import fr.free.nrw.commons.settings.Prefs;
 import fr.free.nrw.commons.ui.widget.HtmlTextView;
 import fr.free.nrw.commons.upload.categories.UploadCategoriesFragment;
@@ -85,9 +92,13 @@ import fr.free.nrw.commons.upload.depicts.DepictsFragment;
 import fr.free.nrw.commons.upload.UploadMediaDetail;
 import fr.free.nrw.commons.utils.DialogUtil;
 import fr.free.nrw.commons.utils.PermissionUtils;
+import fr.free.nrw.commons.utils.ViewUtil;
 import fr.free.nrw.commons.utils.ViewUtilWrapper;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,11 +109,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
+import org.wikipedia.dataclient.mwapi.MwQueryPage;
 import org.wikipedia.language.AppLanguageLookUpTable;
 import org.wikipedia.util.DateUtil;
 import timber.log.Timber;
@@ -110,8 +123,11 @@ import timber.log.Timber;
 public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
     CategoryEditHelper.Callback {
 
-    private static final int REQUEST_CODE = 1001 ;
-    private static final int REQUEST_CODE_EDIT_DESCRIPTION = 1002 ;
+    private static final int REQUEST_CODE = 1001;
+    private static final int REQUEST_CODE_EDIT_DESCRIPTION = 1002;
+    private static final String IMAGE_BACKGROUND_COLOR = "image_background_color";
+    static final int DEFAULT_IMAGE_BACKGROUND_COLOR = 0;
+    
     private boolean editable;
     private boolean isCategoryImage;
     private MediaDetailPagerFragment.MediaDetailProvider detailProvider;
@@ -148,6 +164,8 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
     @Inject
     DeleteHelper deleteHelper;
     @Inject
+    ReviewHelper reviewHelper;
+    @Inject
     CategoryEditHelper categoryEditHelper;
     @Inject
     CoordinateEditHelper coordinateEditHelper;
@@ -157,6 +175,8 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
     ViewUtilWrapper viewUtil;
     @Inject
     CategoryClient categoryClient;
+    @Inject
+    ThanksClient thanksClient;
     @Inject
     @Named("default_preferences")
     JsonKvStore applicationKvStore;
@@ -235,6 +255,8 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
     ProgressBar progressBarEditCategory;
     @BindView(R.id.description_edit)
     Button editDescription;
+    @BindView(R.id.sendThanks)
+    Button sendThanksButton;
 
     private ArrayList<String> categoryNames = new ArrayList<>();
     private String categorySearchQuery;
@@ -361,21 +383,18 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
 
     @OnClick(R.id.mediaDetailImageViewSpacer)
     public void launchZoomActivity(final View view) {
-        final boolean permission = PermissionUtils.
-            hasPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        if (permission) {
+        final boolean hasPermission = PermissionUtils.hasPermission(getActivity(), PermissionUtils.PERMISSIONS_STORAGE);
+        if (hasPermission) {
             launchZoomActivityAfterPermissionCheck(view);
-        }
-        else {
+        } else {
             PermissionUtils.checkPermissionsAndPerformAction(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE,
                 () -> {
                     launchZoomActivityAfterPermissionCheck(view);
                 },
                 R.string.storage_permission_title,
-                R.string.read_storage_permission_rationale
-            );
+                R.string.read_storage_permission_rationale,
+                PermissionUtils.PERMISSIONS_STORAGE
+                );
         }
     }
 
@@ -390,6 +409,15 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
             zoomableIntent.setData(Uri.parse(media.getImageUrl()));
             zoomableIntent.putExtra(
                 ZoomableActivity.ZoomableActivityConstants.ORIGIN, "MediaDetails");
+            
+            int backgroundColor = getImageBackgroundColor();
+            if (backgroundColor != DEFAULT_IMAGE_BACKGROUND_COLOR) {
+                zoomableIntent.putExtra(
+                    ZoomableActivity.ZoomableActivityConstants.PHOTO_BACKGROUND_COLOR,
+                    backgroundColor
+                );
+            }
+            
             ctx.startActivity(
                 zoomableIntent
             );
@@ -417,6 +445,13 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
 
         if(media != null && applicationKvStore.getBoolean(String.format(NOMINATING_FOR_DELETION_MEDIA, media.getImageUrl()), false)) {
             enableProgressBar();
+        }
+
+        if (AccountUtil.getUserName(getContext()) != null && media != null
+            && AccountUtil.getUserName(getContext()).equals(media.getAuthor())) {
+            sendThanksButton.setVisibility(GONE);
+        } else {
+            sendThanksButton.setVisibility(VISIBLE);
         }
 
         scrollView.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -601,16 +636,21 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
      * - when the high resolution image is available, it replaces the low resolution image
      */
     private void setupImageView() {
+        int imageBackgroundColor = getImageBackgroundColor();
+        if (imageBackgroundColor != DEFAULT_IMAGE_BACKGROUND_COLOR) {
+            image.setBackgroundColor(imageBackgroundColor);
+        }
 
         image.getHierarchy().setPlaceholderImage(R.drawable.image_placeholder);
         image.getHierarchy().setFailureImage(R.drawable.image_placeholder);
 
         DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setLowResImageRequest(ImageRequest.fromUri(media != null ? media.getThumbUrl() : null))
-                .setImageRequest(ImageRequest.fromUri(media != null ? media.getImageUrl() : null))
-                .setControllerListener(aspectRatioListener)
-                .setOldController(image.getController())
-                .build();
+            .setLowResImageRequest(ImageRequest.fromUri(media != null ? media.getThumbUrl() : null))
+            .setRetainImageOnFailure(true)
+            .setImageRequest(ImageRequest.fromUri(media != null ? media.getImageUrl() : null))
+            .setControllerListener(aspectRatioListener)
+            .setOldController(image.getController())
+            .build();
         image.setController(controller);
     }
 
@@ -763,12 +803,77 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
     }
 
     @OnClick(R.id.copyWikicode)
-    public void onCopyWikicodeClicked(){
-        String data = "[[" + media.getFilename() + "|thumb|" + media.getFallbackDescription() + "]]";
-        Utils.copy("wikiCode",data,getContext());
+    public void onCopyWikicodeClicked() {
+        String data =
+            "[[" + media.getFilename() + "|thumb|" + media.getFallbackDescription() + "]]";
+        Utils.copy("wikiCode", data, getContext());
         Timber.d("Generated wikidata copy code: %s", data);
 
-        Toast.makeText(getContext(), getString(R.string.wikicode_copied), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.wikicode_copied), Toast.LENGTH_SHORT)
+            .show();
+    }
+
+    /**
+     * Sends thanks to author if the author is not the user
+     */
+    @OnClick(R.id.sendThanks)
+    public void sendThanksToAuthor() {
+        String fileName = media.getFilename();
+        if (TextUtils.isEmpty(fileName)) {
+            Toast.makeText(getContext(), getString(R.string.error_sending_thanks),
+                Toast.LENGTH_SHORT).show();
+            return;
+        }
+        compositeDisposable.add(reviewHelper.getFirstRevisionOfFile(fileName)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(revision -> sendThanks(getContext(), revision)));
+    }
+
+    /**
+     * Api call for sending thanks to the author when the author is not the user
+     * and display toast depending on the result
+     * @param context context
+     * @param firstRevision the revision id of the image
+     */
+    @SuppressLint({"CheckResult", "StringFormatInvalid"})
+    void sendThanks(Context context, MwQueryPage.Revision firstRevision) {
+        ViewUtil.showShortToast(context,
+            context.getString(R.string.send_thank_toast, media.getDisplayTitle()));
+
+        if (firstRevision == null) {
+            return;
+        }
+
+        Observable.defer((Callable<ObservableSource<Boolean>>) () -> thanksClient.thank(
+                firstRevision.getRevisionId()))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe((result) -> {
+                displayThanksToast(context, result);
+            }, Timber::e);
+    }
+
+    /**
+     * Method to display toast when api call to thank the author is completed
+     * @param context context
+     * @param result true if success, false otherwise
+     */
+    @SuppressLint("StringFormatInvalid")
+    private void displayThanksToast(final Context context, final boolean result) {
+        final String message;
+        final String title;
+        if (result) {
+            title = context.getString(R.string.send_thank_success_title);
+            message = context.getString(R.string.send_thank_success_message,
+                media.getDisplayTitle());
+        } else {
+            title = context.getString(R.string.send_thank_failure_title);
+            message = context.getString(R.string.send_thank_failure_message,
+                media.getDisplayTitle());
+        }
+
+        ViewUtil.showShortToast(context, message);
     }
 
     @OnClick(R.id.categoryEditButton)
@@ -1075,7 +1180,7 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
 
         } else if (requestCode == REQUEST_CODE && resultCode == RESULT_CANCELED) {
             viewUtil.showShortToast(getContext(),
-                Objects.requireNonNull(getContext())
+                requireContext()
                     .getString(R.string.coordinates_picking_unsuccessful));
 
         } else if (requestCode == REQUEST_CODE_EDIT_DESCRIPTION && resultCode == RESULT_CANCELED) {
@@ -1230,6 +1335,12 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
     @OnClick(R.id.mediaDetailAuthor)
     public void onAuthorViewClicked() {
         if (media == null || media.getUser() == null) {
+            return;
+        }
+        if (sessionManager.getUserName() == null) {
+            String userProfileLink = BuildConfig.COMMONS_URL + "/wiki/User:" + media.getUser();
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(userProfileLink));
+            startActivity(browserIntent);
             return;
         }
         ProfileActivity.startYourself(getActivity(), media.getUser(), !Objects
@@ -1466,5 +1577,29 @@ public class MediaDetailFragment extends CommonsDaggerSupportFragment implements
 
     public interface Callback {
         void nominatingForDeletion(int index);
+    }
+    
+    /**
+     * Called when the image background color is changed.
+     * You should pass a useable color, not a resource id.
+     * @param color
+     */
+    public void onImageBackgroundChanged(int color) {
+        int currentColor = getImageBackgroundColor();
+        if (currentColor == color) {
+            return;
+        }
+
+        image.setBackgroundColor(color);
+        getImageBackgroundColorPref().edit().putInt(IMAGE_BACKGROUND_COLOR, color).apply();
+    }
+
+    private SharedPreferences getImageBackgroundColorPref() {
+        return getContext().getSharedPreferences(IMAGE_BACKGROUND_COLOR + media.getPageId(), Context.MODE_PRIVATE);
+    }
+
+    private int getImageBackgroundColor() {
+        SharedPreferences imageBackgroundColorPref = this.getImageBackgroundColorPref();
+        return imageBackgroundColorPref.getInt(IMAGE_BACKGROUND_COLOR, DEFAULT_IMAGE_BACKGROUND_COLOR);
     }
 }

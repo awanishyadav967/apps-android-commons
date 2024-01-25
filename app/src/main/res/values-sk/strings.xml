@@ -3,6 +3,7 @@
 * AtonX
 * Kusavica
 * Luky001
+* McDutchie
 * Patriccck
 * Patrik L.
 * Sudo77(new)
@@ -212,7 +213,6 @@
   <string name="location_permission_title">Požiadavka na prístup k polohe</string>
   <string name="ok">OK</string>
   <string name="warning">Upozornenie</string>
-  <string name="duplicate_image_found">Nájdený duplicitný obrázok</string>
   <string name="upload">Nahrať</string>
   <string name="yes">Áno</string>
   <string name="no">Nie</string>
@@ -569,7 +569,7 @@
   <string name="title_for_child_classes">DETSKÉ TRIEDY</string>
   <string name="title_for_parent_classes">RODIČOVSKÉ TRIEDY</string>
   <string name="upload_nearby_place_found_title">Miesto v okolí nájdené</string>
-  <string name="upload_nearby_place_found_description">Je toto fotka miesta %1$s?</string>
+  <string name="upload_nearby_place_found_description" fuzzy="true">Je toto fotka miesta %1$s?</string>
   <string name="title_app_shortcut_bookmark">Záložky</string>
   <string name="title_app_shortcut_setting">Nastavenia</string>
   <string name="remove_bookmark">Odstránené zo záložiek</string>
@@ -626,7 +626,6 @@
   <string name="leaderboard_nearby">V okolí</string>
   <string name="leaderboard_used">Použitia</string>
   <string name="leaderboard_my_rank_button_text">Moje poradie</string>
-  <string name="map_attribution">&amp;#169; &lt;a href=\"https://www.mapbox.com/about/maps/\"&gt;Mapbox&lt;/a&gt; &amp;#169; &lt;a href=\"https://www.openstreetmap.org/copyright\"&gt;OpenStreetMap&lt;/a&gt; &lt;a href=\"https://www.mapbox.com/map-feedback/\"&gt;Vylepšiť túto mapu&lt;/a&gt;</string>
   <string name="limited_connection_enabled">Zapnutý mód limitovaného pripojenia!</string>
   <string name="limited_connection_disabled">Mód limitovaného pripojenia vypnutý. Nedokončené nahrávania budú teraz pokračovať.</string>
   <string name="limited_connection_mode">Mód limitovaného pripojenia</string>
@@ -672,7 +671,7 @@
   <string name="custom_selector_info_text2">Na rozdiel od obrázka v ľavo, obrázkov v pravo má logo Commons, ktoré indikuje, že už je nahraný. Podržte kurzor nad obrázkom pre náhľad.</string>
   <string name="welcome_custom_selector_ok">Úžasné</string>
   <string name="custom_selector_already_uploaded_image_text">Tento obrázok už bol do Commons nahraný.</string>
-  <string name="wlm_upload_info">Tento obrázok bude zaradený do súťaže Wiki miluje monumenty 2021</string>
+  <string name="wlm_upload_info" fuzzy="true">Tento obrázok bude zaradený do súťaže Wiki miluje monumenty</string>
   <string name="display_monuments">Zobraziť monumenty</string>
   <string name="wlm_month_message">Je mesiac Wiki miluje monumenty!</string>
   <string name="learn_more">ZISTIŤ VIAC</string>

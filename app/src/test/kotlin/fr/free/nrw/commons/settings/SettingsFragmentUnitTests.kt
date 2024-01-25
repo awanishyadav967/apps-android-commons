@@ -62,7 +62,7 @@ class SettingsFragmentUnitTests {
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         val activity = Robolectric.buildActivity(SettingsActivity::class.java).create().get()
         context = ApplicationProvider.getApplicationContext()
 
@@ -96,17 +96,6 @@ class SettingsFragmentUnitTests {
         )
         method.isAccessible = true
         method.invoke(fragment)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun testTelemetryOptInOut() {
-        val method: Method = SettingsFragment::class.java.getDeclaredMethod(
-            "telemetryOptInOut",
-            Boolean::class.java
-        )
-        method.isAccessible = true
-        method.invoke(fragment, true)
     }
 
     @Test

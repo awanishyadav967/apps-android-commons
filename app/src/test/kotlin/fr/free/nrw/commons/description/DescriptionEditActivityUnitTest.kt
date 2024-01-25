@@ -19,8 +19,8 @@ import fr.free.nrw.commons.description.EditDescriptionConstants.WIKITEXT
 import fr.free.nrw.commons.settings.Prefs
 import fr.free.nrw.commons.upload.UploadMediaDetail
 import fr.free.nrw.commons.upload.UploadMediaDetailAdapter
-import junit.framework.Assert.assertEquals
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -122,18 +122,6 @@ class DescriptionEditActivityUnitTest {
         method.isAccessible = true
         method.invoke(activity, null)
         assertEquals(activity.isFinishing, true)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun testOnButtonAddDescriptionClicked() {
-        Shadows.shadowOf(Looper.getMainLooper()).idle()
-        val method: Method = DescriptionEditActivity::class.java.getDeclaredMethod(
-            "onButtonAddDescriptionClicked", View::class.java
-        )
-        method.isAccessible = true
-        method.invoke(activity, null)
-        verify(uploadMediaDetailAdapter).addDescription(UploadMediaDetail())
     }
 
     @Test

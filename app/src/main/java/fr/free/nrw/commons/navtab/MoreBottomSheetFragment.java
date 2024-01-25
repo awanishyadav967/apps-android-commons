@@ -15,9 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import fr.free.nrw.commons.AboutActivity;
 import fr.free.nrw.commons.BuildConfig;
@@ -26,11 +23,12 @@ import fr.free.nrw.commons.R;
 import fr.free.nrw.commons.WelcomeActivity;
 import fr.free.nrw.commons.actions.PageEditClient;
 import fr.free.nrw.commons.auth.LoginActivity;
+import fr.free.nrw.commons.databinding.FragmentMoreBottomSheetBinding;
 import fr.free.nrw.commons.di.ApplicationlessInjection;
 import fr.free.nrw.commons.feedback.FeedbackContentCreator;
 import fr.free.nrw.commons.feedback.model.Feedback;
 import fr.free.nrw.commons.feedback.FeedbackDialog;
-import fr.free.nrw.commons.feedback.OnFeedbackSubmitCallback;
+import fr.free.nrw.commons.kvstore.BasicKvStore;
 import fr.free.nrw.commons.kvstore.JsonKvStore;
 import fr.free.nrw.commons.logging.CommonsLogSender;
 import fr.free.nrw.commons.profile.ProfileActivity;
@@ -49,10 +47,8 @@ public class MoreBottomSheetFragment extends BottomSheetDialogFragment {
 
     @Inject
     CommonsLogSender commonsLogSender;
-    @BindView(R.id.more_profile)
-    TextView moreProfile;
 
-    @BindView((R.id.more_peer_review)) TextView morePeerReview;
+    private TextView moreProfile;
 
     @Inject @Named("default_preferences")
     JsonKvStore store;
@@ -66,58 +62,73 @@ public class MoreBottomSheetFragment extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull final LayoutInflater inflater,
         @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        final View view = inflater.inflate(R.layout.fragment_more_bottom_sheet, container, false);
-        ButterKnife.bind(this, view);
+        final @NonNull FragmentMoreBottomSheetBinding binding =
+            FragmentMoreBottomSheetBinding.inflate(inflater, container, false);
+        moreProfile = binding.moreProfile;
+
         if(store.getBoolean(CommonsApplication.IS_LIMITED_CONNECTION_MODE_ENABLED)){
-            morePeerReview.setVisibility(View.GONE);
+            binding.morePeerReview.setVisibility(View.GONE);
         }
+
+        binding.moreLogout.setOnClickListener(v -> onLogoutClicked());
+        binding.moreFeedback.setOnClickListener(v -> onFeedbackClicked());
+        binding.moreAbout.setOnClickListener(v -> onAboutClicked());
+        binding.moreTutorial.setOnClickListener(v -> onTutorialClicked());
+        binding.moreSettings.setOnClickListener(v -> onSettingsClicked());
+        binding.moreProfile.setOnClickListener(v -> onProfileClicked());
+        binding.morePeerReview.setOnClickListener(v -> onPeerReviewClicked());
+
         setUserName();
-        return view;
+        return binding.getRoot();
     }
 
     @Override
     public void onAttach(@NonNull final Context context) {
         super.onAttach(context);
         ApplicationlessInjection
-            .getInstance(getActivity().getApplicationContext())
+            .getInstance(requireActivity().getApplicationContext())
             .getCommonsApplicationComponent()
             .inject(this);
     }
 
     /**
-     * Set the username in navigationHeader.
+     * Set the username and user achievements level (if available) in navigationHeader.
      */
     private void setUserName() {
-        moreProfile.setText(getUserName());
+        BasicKvStore store = new BasicKvStore(this.getContext(), getUserName());
+        String level = store.getString("userAchievementsLevel","0");
+        if (level.equals("0")) {
+            moreProfile.setText(getUserName() + " (" + getString(R.string.see_your_achievements) + ")");
+        }
+        else {
+            moreProfile.setText(getUserName() + " (" + getString(R.string.level) + " " + level + ")");
+        }
     }
 
     private String getUserName(){
         final AccountManager accountManager = AccountManager.get(getActivity());
         final Account[] allAccounts = accountManager.getAccountsByType(BuildConfig.ACCOUNT_TYPE);
         if (allAccounts.length != 0) {
-            moreProfile.setText(allAccounts[0].name);
             return allAccounts[0].name;
         }
         return "";
     }
 
 
-    @OnClick(R.id.more_logout)
-    public void onLogoutClicked() {
-        new AlertDialog.Builder(getActivity())
+    protected void onLogoutClicked() {
+        new AlertDialog.Builder(requireActivity())
             .setMessage(R.string.logout_verification)
             .setCancelable(false)
             .setPositiveButton(R.string.yes, (dialog, which) -> {
-                BaseLogoutListener logoutListener = new BaseLogoutListener();
-                CommonsApplication app = (CommonsApplication) getContext().getApplicationContext();
-                app.clearApplicationData(getContext(), logoutListener);
+                final CommonsApplication app = (CommonsApplication)
+                    requireContext().getApplicationContext();
+                app.clearApplicationData(requireContext(), new BaseLogoutListener());
             })
             .setNegativeButton(R.string.no, (dialog, which) -> dialog.cancel())
             .show();
     }
 
-    @OnClick(R.id.more_feedback)
-    public void onFeedbackClicked() {
+    protected void onFeedbackClicked() {
         showFeedbackDialog();
     }
 
@@ -125,19 +136,14 @@ public class MoreBottomSheetFragment extends BottomSheetDialogFragment {
      * Creates and shows a dialog asking feedback from users
      */
     private void showFeedbackDialog() {
-        new FeedbackDialog(getContext(), new OnFeedbackSubmitCallback() {
-            @Override
-            public void onFeedbackSubmit(Feedback feedback) {
-                uploadFeedback(feedback);
-            }
-        }).show();
+        new FeedbackDialog(getContext(), this::uploadFeedback).show();
     }
 
     /**
      * uploads feedback data on the server
      */
-    void uploadFeedback(Feedback feedback) {
-        FeedbackContentCreator feedbackContentCreator = new FeedbackContentCreator(getContext(), feedback);
+    void uploadFeedback(final Feedback feedback) {
+        final FeedbackContentCreator feedbackContentCreator = new FeedbackContentCreator(getContext(), feedback);
 
         Single<Boolean> single =
             pageEditClient.prependEdit("Commons:Mobile_app/Feedback", feedbackContentCreator.toString(), "Summary")
@@ -162,12 +168,10 @@ public class MoreBottomSheetFragment extends BottomSheetDialogFragment {
      * This method shows the alert dialog when a user wants to send feedback about the app.
      */
     private void showAlertDialog() {
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(requireActivity())
             .setMessage(R.string.feedback_sharing_data_alert)
             .setCancelable(false)
-            .setPositiveButton(R.string.ok, (dialog, which) -> {
-                sendFeedback();
-            })
+            .setPositiveButton(R.string.ok, (dialog, which) -> sendFeedback())
             .show();
     }
 
@@ -194,32 +198,27 @@ public class MoreBottomSheetFragment extends BottomSheetDialogFragment {
         }
     }
 
-    @OnClick(R.id.more_about)
-    public void onAboutClicked() {
+    protected void onAboutClicked() {
         final Intent intent = new Intent(getActivity(), AboutActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        getActivity().startActivity(intent);
+        requireActivity().startActivity(intent);
     }
 
-    @OnClick(R.id.more_tutorial)
-    public void onTutorialClicked() {
+    protected void onTutorialClicked() {
         WelcomeActivity.startYourself(getActivity());
     }
 
-    @OnClick(R.id.more_settings)
-    public void onSettingsClicked() {
+    protected void onSettingsClicked() {
         final Intent intent = new Intent(getActivity(), SettingsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        getActivity().startActivity(intent);
+        requireActivity().startActivity(intent);
     }
 
-    @OnClick(R.id.more_profile)
-    public void onProfileClicked() {
+    protected void onProfileClicked() {
         ProfileActivity.startYourself(getActivity(), getUserName(), false);
     }
 
-    @OnClick(R.id.more_peer_review)
-    public void onPeerReviewClicked() {
+    protected void onPeerReviewClicked() {
         ReviewActivity.startYourself(getActivity(), getString(R.string.title_activity_review));
     }
 
@@ -233,7 +232,7 @@ public class MoreBottomSheetFragment extends BottomSheetDialogFragment {
             nearbyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             nearbyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(nearbyIntent);
-            getActivity().finish();
+            requireActivity().finish();
         }
     }
 }

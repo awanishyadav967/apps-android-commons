@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Authors:
 * Chaduvari
+* Nskjnv
 * Ravichandra
 * Veeven
 -->
@@ -11,6 +12,8 @@
   <string name="commons_website">కామన్స్ వెబ్‌సైటు</string>
   <string name="exit_location_picker">స్థానం ఎంపిక నుండి నిష్క్రమించు</string>
   <string name="submit">పంపించు</string>
+  <string name="add_another_description">మరొక వివరణను జోడించండి</string>
+  <string name="add_new_contribution">కొత్త సహకారాన్ని జోడించండి</string>
   <string name="appwidget_img">నేటి బొమ్మ</string>
   <plurals name="uploads_pending_notification_indicator">
     <item quantity="one">%1$d ఫైలు అప్‌లోడవుతోంది</item>
@@ -176,7 +179,6 @@
   <string name="location_permission_title">స్థల అనుమతి కోరుతున్నాం</string>
   <string name="ok">సరే</string>
   <string name="warning">హెచ్చరిక</string>
-  <string name="duplicate_image_found">నకలు బొమ్మ కనబడింది</string>
   <string name="upload">ఎక్కించు</string>
   <string name="yes">అవును</string>
   <string name="no">వద్దు</string>
@@ -515,7 +517,7 @@
   <string name="title_for_child_classes">చైల్డ్ క్లాస్</string>
   <string name="title_for_parent_classes">పేరెంట్ క్లాస్</string>
   <string name="upload_nearby_place_found_title">సమీపంలోని స్థలాలు కనబడ్డాయి</string>
-  <string name="upload_nearby_place_found_description">ఇది %1$s ప్రాంతపు ఫొటోనా?</string>
+  <string name="upload_nearby_place_found_description" fuzzy="true">ఇది %1$s ప్రాంతపు ఫొటోనా?</string>
   <string name="title_app_shortcut_bookmark">ఇష్టాంశాలు</string>
   <string name="title_app_shortcut_setting">అమరికలు</string>
   <string name="remove_bookmark">బుక్‌మార్కుల నుండి తీసేసాం</string>
@@ -571,7 +573,6 @@
   <string name="leaderboard_nearby">సమీపంలో</string>
   <string name="leaderboard_used">వాడినవి</string>
   <string name="leaderboard_my_rank_button_text">నా ర్యాంకు</string>
-  <string name="map_attribution">&amp;#169; &lt;a href=\"https://www.mapbox.com/about/maps/\"&gt;Mapbox&lt;/a&gt; &amp;#169; &lt;a href=\"https://www.openstreetmap.org/copyright\"&gt;OpenStreetMap&lt;/a&gt; &lt;a href=\"https://www.mapbox.com/map-feedback/\"&gt;ఈ మ్యాపును మెరుగుపరచండి&lt;/a&gt;</string>
   <string name="limited_connection_enabled">పరిమిత కనెక్షను మోడ్ చేతనంగా ఉంది!</string>
   <string name="limited_connection_disabled">పరిమిత కనెక్షను మోడ్‌ను అచేతనం చేసాం. పెండింగులో ఉన్న ఎక్కింపులు తిరిగి మొదలౌతాయి.</string>
   <string name="limited_connection_mode">పరిమిత కనెక్షను మోడ్</string>

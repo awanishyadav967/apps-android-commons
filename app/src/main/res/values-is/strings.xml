@@ -192,7 +192,7 @@
   <string name="location_permission_title">Biður um aðgang að staðsetningu</string>
   <string name="ok">Í lagi</string>
   <string name="warning">Aðvörun</string>
-  <string name="duplicate_image_found">Tvítekin mynd fannst</string>
+  <string name="duplicate_file_name">Tvítekið skráarheiti fannst</string>
   <string name="upload">Senda inn</string>
   <string name="yes">Já</string>
   <string name="no">Nei</string>
@@ -476,6 +476,7 @@
   <string name="exif_tag_name_lensModel">Tegund linsu</string>
   <string name="exif_tag_name_serialNumbers">Raðnúmer</string>
   <string name="exif_tag_name_software">Hugbúnaður</string>
+  <string name="media_location_permission_denied">Aðgangi að staðsetningu gagnamiðla hafnað</string>
   <string name="share_text">Sendu myndir inn á Wikimedia Commons beint úr símanum þínum. Sæktu Commons-appið núna: %1$s</string>
   <string name="share_via">Deila forriti með...</string>
   <string name="image_info">Upplýsingar í mynd</string>
@@ -602,7 +603,6 @@
   <string name="leaderboard_nearby">Í nágrenninu</string>
   <string name="leaderboard_used">Notað</string>
   <string name="leaderboard_my_rank_button_text">Tign mín</string>
-  <string name="map_attribution">&amp;#169; &lt;a href=\"https://www.mapbox.com/about/maps/\"&gt;Mapbox&lt;/a&gt; &amp;#169; &lt;a href=\"https://www.openstreetmap.org/copyright\"&gt;OpenStreetMap&lt;/a&gt; &lt;a href=\"https://www.mapbox.com/map-feedback/\"&gt;Bæta þetta landakort&lt;/a&gt;</string>
   <string name="limited_connection_enabled">Hamur fyrir takmarkaðar tengingar er virkur!</string>
   <string name="limited_connection_disabled">Hamur fyrir takmarkaðar tengingar er óvirkur. Innsendingar í bið munu halda áfram núna.</string>
   <string name="limited_connection_mode">Hamur fyrir takmarkaðar tengingar</string>
@@ -703,4 +703,5 @@
   <string name="welcome_to_full_screen_mode_text">Velkomin í val á fullum skjá</string>
   <string name="full_screen_mode_zoom_info">Notaðu tvo fingur til að renna að og frá.</string>
   <string name="full_screen_mode_features_info">Strjúktu hratt og lengi til að framkvæma þessar aðgerðir: \n- Vinstri/Hægri: Fara í fyrri/næsta \n- Upp: Velja\n- Niður: Merkja sem ekki til innsendingar.</string>
+  <string name="similar_coordinate_description_auto_set">Þessi hnit eru ekki nákvæm, en sá sem sendi inn þessa mynd telur að þau séu nógu nálægt lagi.</string>
 </resources>

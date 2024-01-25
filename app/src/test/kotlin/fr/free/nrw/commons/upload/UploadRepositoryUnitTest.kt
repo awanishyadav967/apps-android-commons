@@ -63,6 +63,9 @@ class UploadRepositoryUnitTest {
     private lateinit var place: Place
 
     @Mock
+    private var location: LatLng? = null
+
+    @Mock
     private lateinit var similarImageInterface: SimilarImageInterface
 
     @Mock
@@ -79,7 +82,7 @@ class UploadRepositoryUnitTest {
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         repository = UploadRepository(
             uploadModel,
             uploadController,
@@ -175,16 +178,16 @@ class UploadRepositoryUnitTest {
     @Test
     fun testPreProcessImage() {
         assertEquals(
-            repository.preProcessImage(uploadableFile, place, similarImageInterface),
-            uploadModel.preProcessImage(uploadableFile, place, similarImageInterface)
+            repository.preProcessImage(uploadableFile, place, similarImageInterface, location),
+            uploadModel.preProcessImage(uploadableFile, place, similarImageInterface, location)
         )
     }
 
     @Test
     fun testGetImageQuality() {
         assertEquals(
-            repository.getImageQuality(uploadItem),
-            uploadModel.getImageQuality(uploadItem)
+            repository.getImageQuality(uploadItem, location),
+            uploadModel.getImageQuality(uploadItem, location)
         )
     }
 

@@ -11,7 +11,6 @@ import org.wikipedia.dataclient.mwapi.SiteMatrix;
 import org.wikipedia.dataclient.mwapi.page.MwMobileViewPageLead;
 import org.wikipedia.dataclient.mwapi.page.MwMobileViewPageRemaining;
 import org.wikipedia.dataclient.mwapi.page.MwQueryPageSummary;
-import org.wikipedia.dataclient.mwapi.page.MwThankPostResponse;
 import org.wikipedia.edit.Edit;
 import org.wikipedia.edit.preview.EditPreview;
 import org.wikipedia.login.LoginClient;
@@ -191,19 +190,7 @@ public interface Service {
     @NonNull Observable<MwQueryResponse> getCategoryMembers(@NonNull @Query("cmtitle") String title,
                                                             @Nullable @Query("cmcontinue") String continueStr);
 
-    @FormUrlEncoded
-    @POST(MW_API_PREFIX + "action=thank")
-    @NonNull Observable<MwThankPostResponse> thank(@Nullable @Field("rev") String rev,
-                                              @Nullable @Field("log") String log,
-                                              @NonNull @Field("token") String token,
-                                              @Nullable @Field("source") String source);
-
-
     // ------- CSRF, Login, and Create Account -------
-
-    @Headers("Cache-Control: no-cache")
-    @GET(MW_API_PREFIX + "action=query&meta=tokens&type=csrf")
-    @NonNull Call<MwQueryResponse> getCsrfTokenCall();
 
     @Headers("Cache-Control: no-cache")
     @GET(MW_API_PREFIX + "action=query&meta=tokens&type=csrf")
@@ -252,17 +239,6 @@ public interface Service {
 
 
     // ------- Notifications -------
-
-    @Headers("Cache-Control: no-cache")
-    @GET(MW_API_PREFIX + "action=query&meta=notifications&notformat=model&notlimit=max")
-    @NonNull Observable<MwQueryResponse> getAllNotifications(@Query("notwikis") @Nullable String wikiList,
-                                              @Query("notfilter") @Nullable String filter,
-                                              @Query("notcontinue") @Nullable String continueStr);
-
-    @FormUrlEncoded
-    @Headers("Cache-Control: no-cache")
-    @POST(MW_API_PREFIX + "action=echomarkread")
-    @NonNull Observable<MwQueryResponse> markRead(@Field("token") @NonNull String token, @Field("list") @Nullable String readList, @Field("unreadlist") @Nullable String unreadList);
 
     @Headers("Cache-Control: no-cache")
     @GET(MW_API_PREFIX + "action=query&meta=notifications&notprop=list&notfilter=!read&notlimit=1")

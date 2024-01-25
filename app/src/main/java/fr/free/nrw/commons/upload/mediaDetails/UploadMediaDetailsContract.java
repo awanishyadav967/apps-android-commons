@@ -2,6 +2,7 @@ package fr.free.nrw.commons.upload.mediaDetails;
 
 import fr.free.nrw.commons.BasePresenter;
 import fr.free.nrw.commons.filepicker.UploadableFile;
+import fr.free.nrw.commons.location.LatLng;
 import fr.free.nrw.commons.nearby.Place;
 import fr.free.nrw.commons.upload.ImageCoordinates;
 import fr.free.nrw.commons.upload.SimilarImageInterface;
@@ -36,6 +37,8 @@ public interface UploadMediaDetailsContract {
 
         void showExternalMap(UploadItem uploadItem);
 
+        void showEditActivity(UploadItem uploadItem);
+
         void updateMediaDetails(List<UploadMediaDetail> uploadMediaDetails);
 
         void displayAddLocationDialog(Runnable runnable);
@@ -43,9 +46,11 @@ public interface UploadMediaDetailsContract {
 
     interface UserActionListener extends BasePresenter<View> {
 
-        void receiveImage(UploadableFile uploadableFile, Place place);
+        void receiveImage(UploadableFile uploadableFile, Place place, LatLng inAppPictureLocation);
 
-        void verifyImageQuality(int uploadItemIndex);
+        void setUploadMediaDetails(List<UploadMediaDetail> uploadMediaDetails, int uploadItemIndex);
+
+        boolean verifyImageQuality(int uploadItemIndex, LatLng inAppPictureLocation);
 
         void copyTitleAndDescriptionToSubsequentMedia(int indexInViewFlipper);
 
@@ -54,6 +59,8 @@ public interface UploadMediaDetailsContract {
         void useSimilarPictureCoordinates(ImageCoordinates imageCoordinates, int uploadItemIndex);
 
         void onMapIconClicked(int indexInViewFlipper);
+
+        void onEditButtonClicked(int indexInViewFlipper);
 
         void onUserConfirmedUploadIsOfPlace(Place place, int uploadItemPosition);
     }

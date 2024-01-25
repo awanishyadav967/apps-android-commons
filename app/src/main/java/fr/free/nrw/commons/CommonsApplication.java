@@ -18,14 +18,12 @@ import android.os.Build;
 import android.os.Process;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.multidex.BuildConfig;
 import androidx.multidex.MultiDexApplication;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
+import com.mapbox.mapboxsdk.WellKnownTileServer;
 import fr.free.nrw.commons.auth.SessionManager;
 import fr.free.nrw.commons.bookmarks.items.BookmarkItemsDao.Table;
 import fr.free.nrw.commons.bookmarks.locations.BookmarkLocationsDao;
@@ -122,8 +120,6 @@ public class CommonsApplication extends MultiDexApplication {
      * Constants End
      */
 
-    private RefWatcher refWatcher;
-
     private static CommonsApplication INSTANCE;
 
     public static CommonsApplication getInstance() {
@@ -145,6 +141,11 @@ public class CommonsApplication extends MultiDexApplication {
     public static Map<String, Boolean> pauseUploads = new HashMap<>();
 
     /**
+     *  In-memory list of uploads that have been cancelled by the user
+     */
+    public static HashSet<String> cancelledUploads = new HashSet<>();
+
+    /**
      * Used to declare and initialize various components and dependencies
      */
     @Override
@@ -153,7 +154,7 @@ public class CommonsApplication extends MultiDexApplication {
 
         INSTANCE = this;
         ACRA.init(this);
-        Mapbox.getInstance(this, getString(R.string.mapbox_commons_app_token));
+        Mapbox.getInstance(this, BuildConfig.MapboxAccessToken, WellKnownTileServer.Mapbox);
 
         ApplicationlessInjection
             .getInstance(this)
@@ -193,9 +194,6 @@ public class CommonsApplication extends MultiDexApplication {
         // or from Observables that are (deliberately or not) missing an onError handler.
         RxJavaPlugins.setErrorHandler(Functions.emptyConsumer());
 
-        if (setupLeakCanary() == RefWatcher.DISABLED) {
-            return;
-        }
         // Fire progress callbacks for every 3% of uploaded content
         System.setProperty("in.yuvi.http.fluent.PROGRESS_TRIGGER_THRESHOLD", "3.0");
     }
@@ -270,29 +268,6 @@ public class CommonsApplication extends MultiDexApplication {
     public String getUserAgent() {
         return "Commons/" + ConfigUtils.getVersionNameWithSha(this)
             + " (https://mediawiki.org/wiki/Apps/Commons) Android/" + Build.VERSION.RELEASE;
-    }
-
-    /**
-     * Helps in setting up LeakCanary library
-     *
-     * @return instance of LeakCanary
-     */
-    protected RefWatcher setupLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return RefWatcher.DISABLED;
-        }
-        return LeakCanary.install(this);
-    }
-
-    /**
-     * Provides a way to get member refWatcher
-     *
-     * @param context Application context
-     * @return application member refWatcher
-     */
-    public static RefWatcher getRefWatcher(Context context) {
-        CommonsApplication application = (CommonsApplication) context.getApplicationContext();
-        return application.refWatcher;
     }
 
     /**

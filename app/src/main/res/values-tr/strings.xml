@@ -5,12 +5,16 @@
 * Chansey
 * Dual
 * Emperyan
+* Ft.Rath
 * Grkn gll
 * Hedda
 * Incelemeelemani
+* JackUKElliott
 * Joseph
 * McAang
+* McDutchie
 * Mirzali
+* MrSchipunov
 * MuratTheTurkish
 * Neslihan Turan
 * Okkerem
@@ -45,6 +49,7 @@
   <string name="nearby_row_image">Resim</string>
   <string name="nearby_all">Hepsi</string>
   <string name="nearby_filter_toggle">Aç/Kapat</string>
+  <string name="nearby_filter_search">Arama Görünümü</string>
   <string name="nearby_filter_state">Yer Durumu</string>
   <string name="appwidget_img">Günün Resmi</string>
   <plurals name="uploads_pending_notification_indicator">
@@ -85,6 +90,7 @@
   <string name="bullet">•</string>
   <string name="menu_settings">Ayarlar</string>
   <string name="intent_share_upload_label">Commons\'a yükle</string>
+  <string name="upload_in_progress">Yükleme devam etmekte</string>
   <string name="username">Kullanıcı adı</string>
   <string name="password">Parola</string>
   <string name="login_credential">Commons Beta hesabınıza giriş yapın</string>
@@ -98,6 +104,9 @@
   <string name="login_success">Oturum açma başarılı!</string>
   <string name="login_failed">Oturum açma başarısız oldu!</string>
   <string name="upload_failed">Dosya bulunamadı. Lütfen başka bir dosya deneyin.</string>
+  <string name="retry_limit_reached">Tekrar deneme sınırına ulaşıldı! Lütfen yüklemeyi iptal edin ve tekrar deneyin.</string>
+  <string name="unrestricted_battery_mode">Pil optimizasyonu kapatılsın mı ?</string>
+  <string name="suggest_unrestricted_mode">Batarya optimizasyonu kapatıldığında 3\'den fazla görüntü yüklemek daha güvenilir bir yoldur. Lütfen sorunsuz bir yükleme deneyimi için Commons uygulamasının ayarlar kısmından batarya optimizasyonunu kapatın.\n\nBatarya Optimizasyonunu kapatmak için yapılabilecek adımlar:\n\nAdım 1: Aşağı kısımdan\"Ayarlar\" butonuna basın\n\nAdım 2: \"Optimizasyon yapılmamış\" seçeneğini \"Tüm uygulamalar\" olarak değiştirin\"\n\nAdım 3: \"Commons\" veya \"fr.free.nrw.commons\" olacak şekilde arama yapın\n\nAdım 4: Tıklayın ve \"Optimize Etme\" seçeneğini seçin.\n\nAdım 5: \"Yapıldı\" seçeneğine basın.</string>
   <string name="authentication_failed">Kimlik doğrulama başarısız oldu, lütfen tekrar giriş yapın</string>
   <string name="uploading_started">Yükleme başladı!</string>
   <string name="uploading_queued">Yükleme kuyruğunda (sınırlı bağlantı modu etkin)</string>
@@ -212,9 +221,11 @@
   <string name="read_storage_permission_rationale">Gerekli izin: Harici depolama birimini okuma. Uygulama, bu olmadan galerinize erişemez.</string>
   <string name="write_storage_permission_rationale">Gerekli izin: Harici depolama alanına yazma. Uygulama, bu olmadan kameranıza/galerinize erişemez.</string>
   <string name="location_permission_title">Konum İzni İsteği</string>
+  <string name="in_app_camera_location_permission_title">Uygulama içi çekimlerin kaydedilen yeri</string>
+  <string name="in_app_camera_location_switch_pref_summary">Cihaz kamerasının kaydetmemesi durumunda konumu uygulama içi çekimlerle kaydetmek için bunu etkinleştirin</string>
   <string name="ok">Tamam</string>
   <string name="warning">Uyarı</string>
-  <string name="duplicate_image_found">Yinelenen Resim Bulundu</string>
+  <string name="duplicate_file_name">Yinelenen Dosya Adı bulundu</string>
   <string name="upload">Yükle</string>
   <string name="yes">Evet</string>
   <string name="no">Hayır</string>
@@ -290,6 +301,7 @@
   <string name="copy_wikicode">Vikimetnini panoya kopyala</string>
   <string name="wikicode_copied">Vikimetin panoya kopyalandı</string>
   <string name="nearby_location_not_available">Yakınımdakiler düzgün çalışmayabilir, Konum kullanılamıyor.</string>
+  <string name="upload_location_access_denied">Konum erişimi reddedildi. Bu özelliği kullanmak için lütfen konumunuzu manuel olarak ayarlayın.</string>
   <string name="location_permission_rationale_nearby">Yakındaki yerler listesini görüntülemek için izin vermeniz gerekiyor</string>
   <string name="nearby_directions">Talimatlar</string>
   <string name="nearby_wikidata">Vikiveri</string>
@@ -357,6 +369,7 @@
   <string name="wrong">Yanlış Cevap</string>
   <string name="quiz_screenshot_question">Bu ekran görüntüsü yüklemeye uygun mu?</string>
   <string name="share_app_title">Uygulamayı Paylaş</string>
+  <string name="rotate">Döndür</string>
   <string name="error_fetching_nearby_places">Yakındaki yerler getirilirken hata oluştu.</string>
   <string name="no_nearby_places_around">Yakınlarda yer bulunamadı</string>
   <string name="error_fetching_nearby_monuments">Yakındaki anıtlar getirilirken hata oluştu.</string>
@@ -437,6 +450,16 @@
   <string name="ends_on">Bitiş:</string>
   <string name="display_campaigns">Kampanyaları göster</string>
   <string name="display_campaigns_explanation">Devam eden çalışmaları görün</string>
+  <string name="in_app_camera_location_access_explanation">Kameranın kaydetmemesi durumunda uygulamanın konumu almasına izin verin. Bazı cihaz kameraları konum kaydetmez. Bu gibi durumlarda uygulamanın konum alıp eklemesine izin vermeniz katkınızı daha faydalı hale getirir. Bunu istediğiniz zaman Ayarlar\'dan değiştirebilirsiniz.</string>
+  <string name="option_allow">İzin ver</string>
+  <string name="option_dismiss">Kapat</string>
+  <string name="in_app_camera_needs_location">Lütfen Ayarlar\'dan konum erişimini açın ve tekrar deneyin. \n\nNot: Uygulama, kısa bir süre içinde cihazdan konum alamazsa yüklemede konum bilgisi olmayabilir.</string>
+  <string name="in_app_camera_location_permission_rationale">EXIF\'de konumun mevcut olmaması durumunda, uygulama içi kameranın konumunuzu görsellerinize ekleyebilmesi için konum iznine ihtiyacı vardır. Lütfen uygulamanın konumunuza erişmesine izin verin ve tekrar deneyin.\n\nNot: Uygulama, kısa bir süre içinde cihazdan konum alamazsa yüklemede konum bilgisi olmayabilir.</string>
+  <string name="in_app_camera_location_permission_denied">Uygulama, konum izninin olmaması nedeniyle, çekimlerin yanı sıra konumu da kaydetmiyor</string>
+  <string name="in_app_camera_location_unavailable">GPS kapalı olduğundan uygulama, çekimlerin yanı sıra konumu da kaydetmiyor</string>
+  <string name="open_document_photo_picker_title">Belge tabanlı fotoğraf seçiciyi kullanın</string>
+  <string name="open_document_photo_picker_explanation">Yeni Android fotoğraf seçici, konum bilgilerini kaybetme riskini taşımaktadır. Kullanıyor gibi görünüyorsa etkinleştirin.</string>
+  <string name="location_loss_warning">Bunu kapatmak, yeni Android fotoğraf seçiciyi etkinleştirebilir. Konum bilgisini kaybetme riski vardır.\n\nDaha fazla bilgi için \'Daha fazlasını oku\'ya dokunun.</string>
   <string name="nearby_campaign_dismiss_message">Artık çalışmaları görmeyeceksiniz. Ancak isterseniz bu bildirimi Ayarlar\'dan yeniden etkinleştirebilirsiniz.</string>
   <string name="this_function_needs_network_connection">Bu işlev ağ bağlantısı gerektirir, lütfen bağlantı ayarlarınızı kontrol edin.</string>
   <string name="error_processing_image">Görüntü işlenirken hata oluştu. Lütfen tekrar deneyin!</string>
@@ -498,6 +521,8 @@
   <string name="exif_tag_name_lensModel">Lens Modeli</string>
   <string name="exif_tag_name_serialNumbers">Seri Numaraları</string>
   <string name="exif_tag_name_software">Yazılım</string>
+  <string name="media_location_permission_denied">Medya konumu erişimi reddedildi</string>
+  <string name="add_location_manually">Yüklediğiniz resimlerden konum verilerini otomatik olarak elde edemeyebiliriz. Lütfen göndermeden önce her resim için uygun konumu ekleyin</string>
   <string name="share_text">Fotoğrafları doğrudan telefonunuzdan Wikimedia Commons\'a yükleyin. Commons Uygulamasını şimdi indirin: %1$s</string>
   <string name="share_via">Uygulamayı şununla paylaşın:</string>
   <string name="image_info">Resim Bilgisi</string>
@@ -513,12 +538,13 @@
   <string name="delete_helper_show_deletion_message_if">%1$s, silme için aday gösterildi.</string>
   <string name="delete_helper_show_deletion_title_failed">Başarısız</string>
   <string name="delete_helper_show_deletion_message_else">Silme işlemi istenemedi.</string>
-  <string name="delete_helper_ask_spam_selfie" fuzzy="true">Selfie</string>
-  <string name="delete_helper_ask_spam_blurry" fuzzy="true">Bulanık</string>
-  <string name="delete_helper_ask_spam_nonsense" fuzzy="true">Anlamsız</string>
+  <string name="delete_helper_ask_spam_selfie">hiçbir maddede kullanılmayan bir selfie</string>
+  <string name="delete_helper_ask_spam_blurry">tamamen bulanık</string>
+  <string name="delete_helper_ask_spam_nonsense">anlamsız, herhangi bir makalede kesinlikle kullanılamaz</string>
   <string name="delete_helper_ask_reason_copyright_press_photo">Basın fotoğrafı</string>
   <string name="delete_helper_ask_reason_copyright_internet_photo">İnternetten rastgele fotoğraf</string>
   <string name="delete_helper_ask_reason_copyright_logo">Logo</string>
+  <string name="delete_helper_ask_reason_copyright_no_freedom_of_panorama">Panorama Özgürlüğünün İhlali</string>
   <string name="delete_helper_ask_alert_set_positive_button_reason">Çünkü</string>
   <string name="category_edit_helper_make_edit_toast">Kategorileri güncellemeye çalışıyor.</string>
   <string name="category_edit_helper_show_edit_title">Kategori güncellemesi</string>
@@ -567,7 +593,7 @@
   <string name="title_for_child_classes">ALT SINIFLAR</string>
   <string name="title_for_parent_classes">ÜST SINIFLAR</string>
   <string name="upload_nearby_place_found_title">Yakındaki Yer Bulundu</string>
-  <string name="upload_nearby_place_found_description">Bu fotoğraf, %1$s yerinin bir fotoğrafı mı?</string>
+  <string name="upload_nearby_place_found_description">Bu bir %1$s fotoğrafı mı?</string>
   <string name="title_app_shortcut_bookmark">Yer imleri</string>
   <string name="title_app_shortcut_setting">Ayarlar</string>
   <string name="remove_bookmark">Yer işaretlerinden kaldırıldı</string>
@@ -582,6 +608,7 @@
   <string name="recommend_high_accuracy_mode">En iyi sonuçlar için Yüksek Hassasiyet modunu seçin.</string>
   <string name="ask_to_turn_location_on">Konum açılsın mı?</string>
   <string name="nearby_needs_location">Yakınımdakilerin düzgün çalışması için konumun açık olması gerekiyor</string>
+  <string name="upload_map_location_access">Konumu otomatik olarak ayarlamak için mevcut konumunuza erişim izni vermeniz gerekir.</string>
   <string name="use_location_from_similar_image">Bu iki fotoğrafı aynı yerde mi çektiniz? Sağdaki resmin enlem/boylamını kullanmak ister misiniz?</string>
   <string name="load_more">Daha Fazla Yükle</string>
   <string name="nearby_no_results">Yer bulunamadı, arama kriterlerinizi değiştirmeyi deneyin.</string>
@@ -624,7 +651,6 @@
   <string name="leaderboard_nearby">Yakınımdakiler</string>
   <string name="leaderboard_used">Kullanılan</string>
   <string name="leaderboard_my_rank_button_text">Sıralamam</string>
-  <string name="map_attribution">&amp;#169; &lt;a href=\"https://www.mapbox.com/about/maps/\"&gt;Mapbox&lt;/a&gt; &amp;#169; &lt;a href=\"https://www.openstreetmap.org/copyright\"&gt;OpenStreetMap&lt;/a&gt; &lt;a href=\"https://www.mapbox.com/map-feedback/\"&gt;Bu haritayı geliştirin&lt;/a&gt;</string>
   <string name="limited_connection_enabled">Sınırlı bağlantı modu etkinleştirildi!</string>
   <string name="limited_connection_disabled">Sınırlı bağlantı modu devre dışı bırakıldı. Bekleyen yüklemeler şimdi devam ettirilecek.</string>
   <string name="limited_connection_mode">Sınırlı Bağlantı Modu</string>
@@ -670,7 +696,11 @@
   <string name="custom_selector_info_text2">Soldaki resimden farklı olarak, sağdaki resimde zaten yüklendiğini belirten Commons logosu var.\n Resim ön izlemesi için dokunup basılı tutun.</string>
   <string name="welcome_custom_selector_ok">Harika</string>
   <string name="custom_selector_already_uploaded_image_text">Bu resim zaten Commons\'a yüklendi.</string>
-  <string name="wlm_upload_info">Bu resim Viki, Anıtları Seviyor 2021 yarışmasına katılacaktır</string>
+  <string name="custom_selector_over_limit_warning">Teknik nedenlerden dolayı uygulama aynı anda %1$d fotoğraftan fazlasını güvenilir bir şekilde yükleyemiyor. %1$d olan yükleme sınırı %2$d ile aşıldı.</string>
+  <string name="custom_selector_dismiss_limit_warning_button_text">Reddet</string>
+  <string name="custom_selector_button_limit_text">Maks: %1$d</string>
+  <string name="custom_selector_limit_error_desc">Hata: Yükleme Sınırı Aşıldı</string>
+  <string name="wlm_upload_info">Bu resim, Viki Anıtları Seviyor yarışmasına katılacaktır</string>
   <string name="display_monuments">Anıtları göster</string>
   <string name="wlm_month_message">Viki, Anıtları Seviyor ayı!</string>
   <string name="learn_more">DAHA FAZLA BİLGİ EDİN</string>
@@ -706,14 +736,32 @@
   <string name="your_feedback">Geri bildiriminiz</string>
   <string name="mark_as_not_for_upload">Yükleme için değil olarak işaretle</string>
   <string name="unmark_as_not_for_upload">Yükleme için değil işaretini kaldır</string>
+  <string name="marking_as_not_for_upload">Yükleme için değil olarak işaretleniyor</string>
+  <string name="unmarking_as_not_for_upload">Yükleme için değil işareti kaldırılıyor</string>
+  <string name="show_already_actioned_pictures">Halihazırda işlem görmüş resimleri göster</string>
+  <string name="hiding_already_actioned_pictures">Halihazırda işlem görmüş resimler gizleniyor</string>
   <string name="no_more_images_found">Başka resim bulunamadı</string>
   <string name="this_image_is_already_uploaded">Bu resim zaten yüklendi</string>
   <string name="can_not_select_this_image_for_upload">Bu resim yüklemek için seçilemiyor</string>
   <string name="image_selected">Resim seçildi</string>
   <string name="image_marked_as_not_for_upload">Resim, yükleme için değil olarak işaretlendi</string>
   <string name="menu_view_report">Bildir</string>
+  <string name="menu_view_set_white_background">Beyaz arka planı ayarla</string>
+  <string name="menu_view_set_black_background">Siyah arka planı ayarla</string>
   <string name="report_violation">İhlal bildir</string>
   <string name="report_user">Bu kullanıcıyı bildir</string>
   <string name="report_content">Bu içeriği bildir</string>
   <string name="request_user_block">Bu kullanıcının engellemesini iste</string>
+  <string name="welcome_to_full_screen_mode_text">Tam Ekran Seçim Moduna Hoş Geldiniz</string>
+  <string name="full_screen_mode_zoom_info">Yakınlaştırmak ve uzaklaştırmak için iki parmağınızı kullanın.</string>
+  <string name="full_screen_mode_features_info">Bu eylemleri gerçekleştirmek için hızlı ve uzun kaydırın: \n- Sol/Sağ: Önceki/sonraki \n- Yukarı: Seç\n- Aşağı: Yükleme için değil olarak işaretle.</string>
+  <string name="set_up_avatar_toast_string">Liderlik sıralaması avatarınızı ayarlamak için herhangi bir görselin üç noktalı menüsünde \"Avatar olarak ayarla\"ya dokunun.</string>
+  <string name="similar_coordinate_description_auto_set">Koordinatlar, tam koordinatlar olmasa da bu resmi yükleyen kişi bu koordinatların yeterince yakın olduğunu düşünüyor.</string>
+  <string name="storage_permissions_denied">Depolama İzni Reddedildi</string>
+  <string name="unable_to_share_upload_item">Bu öge paylaşılamıyor</string>
+  <string name="permissions_are_required_for_functionality">İşlevsellik için izinler gereklidir</string>
+  <plurals name="custom_picker_images_selected_title_appendix">
+    <item quantity="one">%d resim seçildi</item>
+    <item quantity="other">%d resim seçildi</item>
+  </plurals>
 </resources>

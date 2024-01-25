@@ -82,16 +82,28 @@ public class UploadMediaPresenter implements UserActionListener, SimilarImageInt
     }
 
     /**
+     * Sets the Upload Media Details for the corresponding upload item
+     *
+     * @param uploadMediaDetails
+     * @param uploadItemIndex
+     */
+    @Override
+    public void setUploadMediaDetails(List<UploadMediaDetail> uploadMediaDetails, int uploadItemIndex) {
+        repository.getUploads().get(uploadItemIndex).setMediaDetails(uploadMediaDetails);
+    }
+
+    /**
      * Receives the corresponding uploadable file, processes it and return the view with and uplaod item
      *  @param uploadableFile
      * @param place
      */
     @Override
-    public void receiveImage(final UploadableFile uploadableFile, final Place place) {
+    public void receiveImage(final UploadableFile uploadableFile, final Place place,
+                            LatLng inAppPictureLocation) {
         view.showProgress(true);
         compositeDisposable.add(
             repository
-                .preProcessImage(uploadableFile, place, this)
+                .preProcessImage(uploadableFile, place, this, inAppPictureLocation)
                 .map(uploadItem -> {
                     if(place!=null && place.isMonument()){
                         if (place.location != null) {
@@ -177,15 +189,22 @@ public class UploadMediaPresenter implements UserActionListener, SimilarImageInt
      * @param uploadItemIndex
      */
     @Override
-    public void verifyImageQuality(int uploadItemIndex) {
-      final UploadItem uploadItem = repository.getUploads().get(uploadItemIndex);
+    public boolean verifyImageQuality(int uploadItemIndex, LatLng inAppPictureLocation) {
+      final List<UploadItem> uploadItems = repository.getUploads();
+      if (uploadItems.size()==0) {
+          view.showProgress(false);
+          // No internationalization required for this error message because it's an internal error.
+          view.showMessage("Internal error: Zero upload items received by the Upload Media Detail Fragment. Sorry, please upload again.",R.color.color_error);
+          return false;
+      }
+      UploadItem uploadItem = uploadItems.get(uploadItemIndex);
 
-      if (uploadItem.getGpsCoords().getDecimalCoords() == null) {
+      if (uploadItem.getGpsCoords().getDecimalCoords() == null && inAppPictureLocation == null) {
           final Runnable onSkipClicked = () -> {
               view.showProgress(true);
               compositeDisposable.add(
                   repository
-                      .getImageQuality(uploadItem)
+                      .getImageQuality(uploadItem, inAppPictureLocation)
                       .observeOn(mainThreadScheduler)
                       .subscribe(imageResult -> {
                               view.showProgress(false);
@@ -208,7 +227,7 @@ public class UploadMediaPresenter implements UserActionListener, SimilarImageInt
           view.showProgress(true);
           compositeDisposable.add(
               repository
-                  .getImageQuality(uploadItem)
+                  .getImageQuality(uploadItem, inAppPictureLocation)
                   .observeOn(mainThreadScheduler)
                   .subscribe(imageResult -> {
                           view.showProgress(false);
@@ -226,6 +245,7 @@ public class UploadMediaPresenter implements UserActionListener, SimilarImageInt
                       })
           );
       }
+      return true;
     }
 
 
@@ -273,6 +293,11 @@ public class UploadMediaPresenter implements UserActionListener, SimilarImageInt
   }
 
   @Override
+  public void onEditButtonClicked(int indexInViewFlipper){
+      view.showEditActivity(repository.getUploads().get(indexInViewFlipper));
+  }
+
+  @Override
   public void onUserConfirmedUploadIsOfPlace(Place place, int uploadItemPosition) {
     final List<UploadMediaDetail> uploadMediaDetails = repository.getUploads()
         .get(uploadItemPosition)
@@ -314,18 +339,23 @@ public class UploadMediaPresenter implements UserActionListener, SimilarImageInt
             uploadItem.setHasInvalidLocation(true);
         }
 
-        switch (errorCode) {
-            case EMPTY_CAPTION:
-                Timber.d("Captions are empty. Showing toast");
-                view.showMessage(R.string.add_caption_toast, R.color.color_error);
-                break;
-            case FILE_NAME_EXISTS:
-                Timber.d("Trying to show duplicate picture popup");
-                view.showDuplicatePicturePopup(uploadItem);
-                break;
-            default:
-                view.showBadImagePopup(errorCode, uploadItem);
+        // If errorCode is empty caption show message
+        if (errorCode == EMPTY_CAPTION) {
+            Timber.d("Captions are empty. Showing toast");
+            view.showMessage(R.string.add_caption_toast, R.color.color_error);
         }
+
+        // If image with same file name exists check the bit in errorCode is set or not
+        if ((errorCode & FILE_NAME_EXISTS) != 0) {
+            Timber.d("Trying to show duplicate picture popup");
+            view.showDuplicatePicturePopup(uploadItem);
+        }
+
+        // If image has some other problems, show popup accordingly
+        if (errorCode != EMPTY_CAPTION && errorCode != FILE_NAME_EXISTS) {
+            view.showBadImagePopup(errorCode, uploadItem);
+        }
+
     }
 
     /**

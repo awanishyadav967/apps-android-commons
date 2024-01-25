@@ -1,14 +1,21 @@
 package fr.free.nrw.commons.contributions;
 
+import static android.content.Context.SENSOR_SERVICE;
 import static fr.free.nrw.commons.contributions.Contribution.STATE_FAILED;
 import static fr.free.nrw.commons.contributions.Contribution.STATE_PAUSED;
 import static fr.free.nrw.commons.nearby.fragments.NearbyParentFragment.WLM_URL;
 import static fr.free.nrw.commons.profile.ProfileActivity.KEY_USERNAME;
+import static fr.free.nrw.commons.utils.LengthUtils.computeBearing;
 import static fr.free.nrw.commons.utils.LengthUtils.formatDistanceBetween;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +28,9 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -35,6 +45,7 @@ import fr.free.nrw.commons.profile.ProfileActivity;
 import fr.free.nrw.commons.theme.BaseActivity;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import androidx.work.WorkManager;
@@ -78,6 +89,7 @@ public class ContributionsFragment
         OnBackStackChangedListener,
         LocationUpdateListener,
     MediaDetailProvider,
+    SensorEventListener,
     ICampaignsView, ContributionsContract.View, Callback{
     @Inject @Named("default_preferences") JsonKvStore store;
     @Inject NearbyController nearbyController;
@@ -92,6 +104,7 @@ public class ContributionsFragment
     private static final String CONTRIBUTION_LIST_FRAGMENT_TAG = "ContributionListFragmentTag";
     private MediaDetailPagerFragment mediaDetailPagerFragment;
     static final String MEDIA_DETAIL_PAGER_FRAGMENT_TAG = "MediaDetailFragmentTag";
+    private static final int MAX_RETRIES = 10;
 
     @BindView(R.id.card_view_nearby) public NearbyNotificationCardView nearbyNotificationCardView;
     @BindView(R.id.campaigns_view) CampaignView campaignView;
@@ -105,7 +118,6 @@ public class ContributionsFragment
 
     private LatLng curLatLng;
 
-    private boolean firstLocationUpdate = true;
     private boolean isFragmentAttachedBefore = false;
     private View checkBoxView;
     private CheckBox checkBox;
@@ -116,6 +128,33 @@ public class ContributionsFragment
 
     String userName;
     private boolean isUserProfile;
+
+    private SensorManager mSensorManager;
+    private Sensor mLight;
+    private float direction;
+    private ActivityResultLauncher<String[]> nearbyLocationPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+        @Override
+        public void onActivityResult(Map<String, Boolean> result) {
+            boolean areAllGranted = true;
+            for (final boolean b : result.values()) {
+                areAllGranted = areAllGranted && b;
+            }
+
+            if (areAllGranted) {
+                onLocationPermissionGranted();
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+                    && store.getBoolean("displayLocationPermissionForCardView", true)
+                    && !store.getBoolean("doNotAskForLocationPermission", false)
+                    && (((MainActivity) getActivity()).activeFragment == ActiveFragment.CONTRIBUTIONS)) {
+                    nearbyNotificationCardView.permissionType = NearbyNotificationCardView.PermissionType.ENABLE_LOCATION_PERMISSION;
+                    showNearbyCardPermissionRationale();
+                } else {
+                    displayYouWontSeeNearbyMessage();
+                }
+            }
+        }
+    });
 
     @NonNull
     public static ContributionsFragment newInstance() {
@@ -133,6 +172,8 @@ public class ContributionsFragment
             userName = getArguments().getString(KEY_USERNAME);
             isUserProfile = true;
         }
+        mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
+        mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
     }
 
     @Nullable
@@ -196,6 +237,10 @@ public class ContributionsFragment
 
     @Override
     public void onCreateOptionsMenu(@NonNull final Menu menu, @NonNull final MenuInflater inflater) {
+
+        // Removing contributions menu items for ProfileActivity
+        if (getActivity() instanceof ProfileActivity) { return; }
+
         inflater.inflate(R.menu.contribution_activity_notification_menu, menu);
 
         MenuItem notificationsMenuItem = menu.findItem(R.id.notifications);
@@ -339,23 +384,23 @@ public class ContributionsFragment
         if (fragment.isAdded() && otherFragment != null) {
             transaction.hide(otherFragment);
             transaction.show(fragment);
-            transaction.addToBackStack(CONTRIBUTION_LIST_FRAGMENT_TAG);
+            transaction.addToBackStack(tag);
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
         } else if (fragment.isAdded() && otherFragment == null) {
             transaction.show(fragment);
-            transaction.addToBackStack(CONTRIBUTION_LIST_FRAGMENT_TAG);
+            transaction.addToBackStack(tag);
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
         }else if (!fragment.isAdded() && otherFragment != null ) {
             transaction.hide(otherFragment);
             transaction.add(R.id.root_frame, fragment, tag);
-            transaction.addToBackStack(CONTRIBUTION_LIST_FRAGMENT_TAG);
+            transaction.addToBackStack(tag);
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
         } else if (!fragment.isAdded()) {
             transaction.replace(R.id.root_frame, fragment, tag);
-            transaction.addToBackStack(CONTRIBUTION_LIST_FRAGMENT_TAG);
+            transaction.addToBackStack(tag);
             transaction.commit();
             getChildFragmentManager().executePendingTransactions();
         }
@@ -395,6 +440,7 @@ public class ContributionsFragment
         super.onPause();
         locationManager.removeLocationListener(this);
         locationManager.unregisterLocationManager();
+        mSensorManager.unregisterListener(this);
     }
 
     @Override
@@ -406,7 +452,6 @@ public class ContributionsFragment
     public void onResume() {
         super.onResume();
         contributionsPresenter.onAttachView(this);
-        firstLocationUpdate = true;
         locationManager.addLocationListener(this);
         nearbyNotificationCardView.permissionRequestButton.setOnClickListener(v -> {
             showNearbyCardPermissionRationale();
@@ -416,6 +461,13 @@ public class ContributionsFragment
         if (mediaDetailPagerFragment == null && !isUserProfile) {
             if (store.getBoolean("displayNearbyCardView", true)) {
                 checkPermissionsAndShowNearbyCardView();
+                
+                // Calling nearby card to keep showing it even when user clicks on it and comes back
+                try {
+                    updateClosestNearbyCardViewInfo();
+                } catch (Exception e) {
+                    Timber.e(e);
+                }
                 if (nearbyNotificationCardView.cardViewVisibilityState == NearbyNotificationCardView.CardViewVisibilityState.READY) {
                     nearbyNotificationCardView.setVisibility(View.VISIBLE);
                 }
@@ -431,10 +483,11 @@ public class ContributionsFragment
                 fetchCampaigns();
             }
         }
+        mSensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_UI);
     }
 
     private void checkPermissionsAndShowNearbyCardView() {
-        if (PermissionUtils.hasPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (PermissionUtils.hasPermission(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION})) {
             onLocationPermissionGranted();
         } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
                 && store.getBoolean("displayLocationPermissionForCardView", true)
@@ -446,12 +499,7 @@ public class ContributionsFragment
     }
 
     private void requestLocationPermission() {
-        PermissionUtils.checkPermissionsAndPerformAction(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                this::onLocationPermissionGranted,
-                this::displayYouWontSeeNearbyMessage,
-                -1,
-                -1);
+        nearbyLocationPermissionLauncher.launch(new String[]{permission.ACCESS_FINE_LOCATION});
     }
 
     private void onLocationPermissionGranted() {
@@ -493,7 +541,8 @@ public class ContributionsFragment
             Place closestNearbyPlace = nearbyPlacesInfo.placeList.get(0);
             String distance = formatDistanceBetween(curLatLng, closestNearbyPlace.location);
             closestNearbyPlace.setDistance(distance);
-            nearbyNotificationCardView.updateContent(closestNearbyPlace);
+            direction = (float) computeBearing(curLatLng, closestNearbyPlace.location);
+            nearbyNotificationCardView.updateContent(closestNearbyPlace, direction);
         } else {
             // Means that no close nearby place is found
             nearbyNotificationCardView.setVisibility(View.GONE);
@@ -521,22 +570,17 @@ public class ContributionsFragment
     @Override
     public void onLocationChangedSignificantly(LatLng latLng) {
         // Will be called if location changed more than 1000 meter
-        // Do nothing on slight changes for using network efficiently
-        firstLocationUpdate = false;
         updateClosestNearbyCardViewInfo();
     }
 
     @Override
     public void onLocationChangedSlightly(LatLng latLng) {
         /* Update closest nearby notification card onLocationChangedSlightly
-        If first time to update location after onResume, then no need to wait for significant
-        location change. Any closest location is better than no location
         */
-        if (firstLocationUpdate) {
+        try {
             updateClosestNearbyCardViewInfo();
-            // Turn it to false, since it is not first location update anymore. To change closest location
-            // notification, we need to wait for a significant location change.
-            firstLocationUpdate = false;
+        } catch (Exception e) {
+            Timber.e(e);
         }
     }
 
@@ -590,6 +634,15 @@ public class ContributionsFragment
     }
 
     /**
+     * Restarts the upload process for a contribution
+     * @param contribution
+     */
+    public void restartUpload(Contribution contribution) {
+        contribution.setState(Contribution.STATE_QUEUED);
+        contributionsPresenter.saveContribution(contribution);
+        Timber.d("Restarting for %s", contribution.toString());
+    }
+    /**
      * Retry upload when it is failed
      *
      * @param contribution contribution to be retried
@@ -597,10 +650,23 @@ public class ContributionsFragment
     @Override
     public void retryUpload(Contribution contribution) {
         if (NetworkUtils.isInternetConnectionEstablished(getContext())) {
-            if (contribution.getState() == STATE_FAILED || contribution.getState() == STATE_PAUSED || contribution.getState()==Contribution.STATE_QUEUED_LIMITED_CONNECTION_MODE) {
-                contribution.setState(Contribution.STATE_QUEUED);
-                contributionsPresenter.saveContribution(contribution);
-                Timber.d("Restarting for %s", contribution.toString());
+            if (contribution.getState() == STATE_PAUSED || contribution.getState()==Contribution.STATE_QUEUED_LIMITED_CONNECTION_MODE) {
+                restartUpload(contribution);
+            } else if (contribution.getState() == STATE_FAILED) {
+                int retries = contribution.getRetries();
+                // TODO: Improve UX. Additional details: https://github.com/commons-app/apps-android-commons/pull/5257#discussion_r1304662562
+                /* Limit the number of retries for a failed upload
+                   to handle cases like invalid filename as such uploads
+                   will never be successful */
+                if(retries < MAX_RETRIES) {
+                    contribution.setRetries(retries + 1);
+                    Timber.d("Retried uploading %s %d times", contribution.getMedia().getFilename(), retries + 1);
+                    restartUpload(contribution);
+                } else {
+                    // TODO: Show the exact reason for failure
+                    Toast.makeText(getContext(),
+                        R.string.retry_limit_reached, Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Timber.d("Skipping re-upload for non-failed %s", contribution.toString());
             }
@@ -641,7 +707,7 @@ public class ContributionsFragment
     @Override
     public void showDetail(int position, boolean isWikipediaButtonDisplayed) {
         if (mediaDetailPagerFragment == null || !mediaDetailPagerFragment.isVisible()) {
-            mediaDetailPagerFragment = new MediaDetailPagerFragment();
+            mediaDetailPagerFragment = MediaDetailPagerFragment.newInstance(false, true);
             if(isUserProfile) {
                 ((ProfileActivity)getActivity()).setScroll(false);
             }
@@ -722,7 +788,7 @@ public class ContributionsFragment
     public void refreshNominatedMedia(int index) {
         if(mediaDetailPagerFragment != null && !contributionsListFragment.isVisible()) {
             removeFragment(mediaDetailPagerFragment);
-            mediaDetailPagerFragment = new MediaDetailPagerFragment(false, true);
+            mediaDetailPagerFragment = MediaDetailPagerFragment.newInstance(false, true);
             mediaDetailPagerFragment.showImage(index);
             showMediaDetailPagerFragment();
         }
@@ -743,6 +809,17 @@ public class ContributionsFragment
       }
   };
 
+    /**
+     * When the device rotates, rotate the Nearby banner's compass arrow in tandem.
+     */
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float rotateDegree = Math.round(event.values[0]);
+        nearbyNotificationCardView.rotateCompass(rotateDegree, direction);
+    }
 
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Nothing to do.
+    }
 }
-

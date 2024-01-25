@@ -7,6 +7,7 @@ import fr.free.nrw.commons.auth.SessionManager;
 import fr.free.nrw.commons.contributions.Contribution;
 import fr.free.nrw.commons.filepicker.UploadableFile;
 import fr.free.nrw.commons.kvstore.JsonKvStore;
+import fr.free.nrw.commons.location.LatLng;
 import fr.free.nrw.commons.nearby.Place;
 import fr.free.nrw.commons.settings.Prefs;
 import fr.free.nrw.commons.upload.depicts.DepictsFragment;
@@ -86,18 +87,20 @@ public class UploadModel {
      */
     public Observable<UploadItem> preProcessImage(final UploadableFile uploadableFile,
         final Place place,
-        final SimilarImageInterface similarImageInterface) {
+        final SimilarImageInterface similarImageInterface,
+        LatLng inAppPictureLocation) {
         return Observable.just(
-            createAndAddUploadItem(uploadableFile, place, similarImageInterface));
+            createAndAddUploadItem(uploadableFile, place, similarImageInterface, inAppPictureLocation));
     }
 
-    public Single<Integer> getImageQuality(final UploadItem uploadItem) {
-        return imageProcessingService.validateImage(uploadItem);
+    public Single<Integer> getImageQuality(final UploadItem uploadItem, LatLng inAppPictureLocation) {
+        return imageProcessingService.validateImage(uploadItem, inAppPictureLocation);
     }
 
     private UploadItem createAndAddUploadItem(final UploadableFile uploadableFile,
         final Place place,
-        final SimilarImageInterface similarImageInterface) {
+        final SimilarImageInterface similarImageInterface,
+        LatLng inAppPictureLocation) {
         final UploadableFile.DateTimeWithSource dateTimeWithSource = uploadableFile
                 .getFileCreatedDate(context);
         long fileCreatedDate = -1;
@@ -110,13 +113,21 @@ public class UploadModel {
         }
         Timber.d("File created date is %d", fileCreatedDate);
         final ImageCoordinates imageCoordinates = fileProcessor
-                .processFileCoordinates(similarImageInterface, uploadableFile.getFilePath());
+                .processFileCoordinates(similarImageInterface, uploadableFile.getFilePath(),
+                    inAppPictureLocation);
         final UploadItem uploadItem = new UploadItem(
             Uri.parse(uploadableFile.getFilePath()),
                 uploadableFile.getMimeType(context), imageCoordinates, place, fileCreatedDate,
                 createdTimestampSource,
                 uploadableFile.getContentUri(),
                 fileCreatedDateString);
+
+        // If an uploadItem of the same uploadableFile has been created before, we return that.
+        // This is to avoid multiple instances of uploadItem of same file passed around.
+        if (items.contains(uploadItem)) {
+            return items.get(items.indexOf(uploadItem));
+        }
+
         if (place != null) {
             uploadItem.getUploadMediaDetails().set(0, new UploadMediaDetail(place));
         }

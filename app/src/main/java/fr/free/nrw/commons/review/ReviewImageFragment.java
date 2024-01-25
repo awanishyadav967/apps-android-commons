@@ -21,6 +21,7 @@ import fr.free.nrw.commons.R;
 import fr.free.nrw.commons.di.CommonsDaggerSupportFragment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ReviewImageFragment extends CommonsDaggerSupportFragment {
 
@@ -91,6 +92,7 @@ public class ReviewImageFragment extends CommonsDaggerSupportFragment {
         ButterKnife.bind(this, layoutView);
 
         String question, explanation=null, yesButtonText, noButtonText;
+
         switch (position) {
             case SPAM:
                 question = getString(R.string.review_spam);
@@ -127,13 +129,12 @@ public class ReviewImageFragment extends CommonsDaggerSupportFragment {
                 enableButtons();
                 question = getString(R.string.review_thanks);
 
-                // Get existing user name if it is already saved using savedInstanceState else get from reviewController
-                if (savedInstanceState == null) {
-                    if (getReviewActivity().reviewController.firstRevision != null) {
-                        user = getReviewActivity().reviewController.firstRevision.getUser();
-                    }
+                if (getReviewActivity().reviewController.firstRevision != null) {
+                    user = getReviewActivity().reviewController.firstRevision.getUser();
                 } else {
-                    user = savedInstanceState.getString(SAVED_USER);
+                    if(savedInstanceState != null) {
+                        user = savedInstanceState.getString(SAVED_USER);
+                    }
                 }
 
                 //if the user is null because of whatsoever reason, review will not be sent anyways

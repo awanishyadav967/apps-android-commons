@@ -161,7 +161,6 @@
   <string name="location_permission_title">Domanda de autorixasion par ła locałixasion.</string>
   <string name="ok">Va ben</string>
   <string name="warning">Òcio!</string>
-  <string name="duplicate_image_found">Catada na imajine dopiada</string>
   <string name="upload">Carga</string>
   <string name="yes">Sì</string>
   <string name="no">No</string>
@@ -455,7 +454,7 @@
   <string name="nearby_search_hint">Ponti, muxei, alberghi etc.</string>
   <string name="you_must_reset_your_passsword">Se ga verifegà on erore co te jeri drio entrare n\'te l\'utensa, xé neçesario rinpostar ła ciave.</string>
   <string name="upload_nearby_place_found_title">Posto cuà rente catà</string>
-  <string name="upload_nearby_place_found_description">Sta cuà ła xé na foto del posto %1$s?</string>
+  <string name="upload_nearby_place_found_description" fuzzy="true">Sta cuà ła xé na foto del posto %1$s?</string>
   <string name="title_app_shortcut_bookmark">Segnałibri</string>
   <string name="title_app_shortcut_setting">Inpostasion</string>
   <string name="remove_bookmark">Cava dai favorii</string>

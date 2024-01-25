@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/mainBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,7 +29,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="false"
+                android:scrollbarThumbVertical="@color/primaryColor"
+                android:scrollbarSize="@dimen/dimen_6"/>
 
         </RelativeLayout>
 

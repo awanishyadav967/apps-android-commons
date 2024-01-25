@@ -61,6 +61,7 @@
   <string name="bullet">•</string>
   <string name="menu_settings">Beállítások</string>
   <string name="intent_share_upload_label">Feltöltés a Commonsra</string>
+  <string name="upload_in_progress">Feltöltés folyamatban</string>
   <string name="username">Felhasználónév</string>
   <string name="password">Jelszó</string>
   <string name="login_credential">Jelentkezz be a Commons Béta fiókoddal</string>
@@ -72,6 +73,8 @@
   <string name="login_success">Sikeres bejelentkezés</string>
   <string name="login_failed">A bejelentkezés nem sikerült.</string>
   <string name="upload_failed">A fájl nem található. Próbálkozz másik fájllal.</string>
+  <string name="retry_limit_reached">Elérted az újrapróbálkozások maximális számát. Szakítsd meg a feltöltést, és próbáld újra!</string>
+  <string name="unrestricted_battery_mode">Kikapcsolod az akkumulátoroptimalizálást?</string>
   <string name="authentication_failed">Sikertelen hitelesítés, kérlek jelentkezz be újra</string>
   <string name="uploading_started">Feltöltés elindult.</string>
   <string name="uploading_queued">Feltöltések késleltetése (korlátozott kapcsolat-mód bekapcsolva)</string>
@@ -176,6 +179,8 @@
   <string name="read_storage_permission_rationale">Szükséges engedély: Külső tárhely olvasása. Az alkalmazás nem működik enélkül.</string>
   <string name="write_storage_permission_rationale">Szükséges engedély: Külső tárhely írása. Az alkalmazás nem tudja használni a kamerát/galériát enélkül.</string>
   <string name="location_permission_title">Helymeghatározás hozzáférés igénylése</string>
+  <string name="in_app_camera_location_permission_title">Alkalmazáson belüli, képekhez rendelt helymeghatározás rögzítése</string>
+  <string name="in_app_camera_location_switch_pref_summary">Ezzel az opcióval engedélyezheted az alkalmazáson belüli helymeghatározást, ha az eszköz kamerája nem rögzítené</string>
   <string name="ok">OK</string>
   <string name="warning">Figyelmeztetés</string>
   <string name="upload">Feltöltés</string>
@@ -248,6 +253,7 @@
   <string name="copy_wikicode">Wikiszöveg vágólapra másolása</string>
   <string name="wikicode_copied">A wikiszöveg a vágólapra lett másolva</string>
   <string name="nearby_location_not_available">A hely nem érhető el.</string>
+  <string name="upload_location_access_denied">A helyhez való hozzáférés megtagadva. A funkció eléréséhez add meg tartózkodási helyed!</string>
   <string name="location_permission_rationale_nearby">Közeli helyek listájának megtekintéséhez engedély szükséges</string>
   <string name="nearby_directions">Irányok</string>
   <string name="nearby_wikidata">Wikidata</string>
@@ -285,7 +291,7 @@
   <string name="explore_tab_title_featured">Kiemelt</string>
   <string name="explore_tab_title_mobile">Feltöltés mobillal</string>
   <string name="successful_wikidata_edit">A kép sikeresen hozzáadva a következő Wikidata-elemhez: „%1$s”!</string>
-  <string name="wikidata_edit_failure">Nem sikerült a kapcsolódó Wikidata elem frissítése.</string>
+  <string name="wikidata_edit_failure">Nem sikerült a kapcsolódó Wikidata-elem frissítése.</string>
   <string name="menu_set_wallpaper">Beállítás háttérképként</string>
   <string name="wallpaper_set_successfully">Háttérkép sikeresen beállítva!</string>
   <string name="quiz">Kvíz</string>
@@ -372,6 +378,13 @@
   <string name="achievements_fetch_failed">Valami hiba történt, nem sikerült az eredményeid betöltése</string>
   <string name="display_campaigns">Kampányok megjelenítése</string>
   <string name="display_campaigns_explanation">Folyamatban lévő kampányok megjelenítése</string>
+  <string name="in_app_camera_location_access_explanation">Engedélyezd az alkalmazás számára a helyszín lekérését, ha a kamera nem rögzíti azt! Egyes eszközök kamerái nem rögzítik a helyszínt. Közreműködésed hasznosabb, ha ilyen esetekben hagyod, hogy az alkalmazás lekérje és hozzárendelje a helyszínt. Ezt bármikor módosíthatod a Beállításokban</string>
+  <string name="option_allow">Engedélyezés</string>
+  <string name="option_dismiss">Elvetés</string>
+  <string name="in_app_camera_needs_location">Engedélyezd a helymeghatározást a Beállításokban, és próbáld újra!\n\nMegjegyzés: Előfordulhat, hogy a feltöltéshez nem társul helyszín, ha az alkalmazás nem tudja rövid időn belül lekérni az eszközről.</string>
+  <string name="in_app_camera_location_permission_rationale">Az alkalmazás kamerájának engedélyre van szüksége, hogy a képekhez helyszínt társíthasson, amennyiben az EXIF-ben nem elérhető. Engedélyezd az alkalmazásnak a helymeghatározást, majd próbáld újra!\n\nMegjegyzés: Előfordulhat, hogy a feltöltéshez nem társul helyszín, ha az alkalmazás nem tudja rövid időn belül lekérni az eszközről.</string>
+  <string name="in_app_camera_location_permission_denied">Az alkalmazás helymeghatározási engedély hiányában nem rögzíti a helyszínt a felvételekkel együtt</string>
+  <string name="in_app_camera_location_unavailable">Az alkalmazás nem rögzít helyszínt a felvételekkel együtt, mivel a GPS ki van kapcsolva</string>
   <string name="nearby_campaign_dismiss_message">Többé nem lesznek láthatók a kampányok. Ha akarod, visszakapcsolható a Beállításoknál.</string>
   <string name="this_function_needs_network_connection">Ehhez a funkcióhoz hálózati kapcsolat szükséges, kérlek ellenőrizd az internetbeállításaidat.</string>
   <string name="error_processing_image">Hiba történt a kép feltöltése során. Próbáld meg újra!</string>
@@ -466,14 +479,19 @@
   <string name="theme_default_name">Rendszerbeállítás követése</string>
   <string name="theme_dark_name">Sötét</string>
   <string name="theme_light_name">Világos</string>
-  <string name="map_attribution">&amp;#169; &lt;a href=\"https://www.mapbox.com/about/maps/\"&gt;Mapbox&lt;/a&gt; &amp;#169; &lt;a href=\"https://www.openstreetmap.org/copyright\"&gt;OpenStreetMap&lt;/a&gt; &lt;a href=\"https://www.mapbox.com/map-feedback/\"&gt;Térkép fejlesztése&lt;/a&gt;</string>
   <string name="limited_connection_enabled">Korlátozott kapcsolat-mód bekapcsolva!</string>
   <string name="limited_connection_disabled">Korlátozott kapcsolat-mód kikapcsolva. Függőben lévő feltöltések folytatása.</string>
   <string name="limited_connection_mode">Korlátozott kapcsolat mód</string>
   <string name="custom_selector_info_text1">Itt ellenőrizheted a már Commonsba feltöltött képeket.</string>
+  <string name="marking_as_not_for_upload">Megjelölés, mint nem feltöltendő</string>
+  <string name="unmarking_as_not_for_upload">Nem feltöltendő megjelölés visszavonása</string>
   <string name="menu_view_report">Jelentés</string>
   <string name="report_violation">Szabálysértés jelentése</string>
   <string name="report_user">Felhasználó jelentése</string>
   <string name="report_content">Tartalom jelentése</string>
   <string name="request_user_block">Kérelem a felhasználó letiltásához</string>
+  <plurals name="custom_picker_images_selected_title_appendix">
+    <item quantity="one">%d kép kiválasztva</item>
+    <item quantity="other"> %d kép kiválasztva</item>
+  </plurals>
 </resources>

@@ -3,6 +3,7 @@ package fr.free.nrw.commons.media
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Looper
@@ -20,6 +21,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.soloader.SoLoader
 import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.doReturn
 import fr.free.nrw.commons.LocationPicker.LocationPickerActivity
 import fr.free.nrw.commons.Media
 import fr.free.nrw.commons.R
@@ -60,15 +62,11 @@ class MediaDetailFragmentUnitTests {
 
     private val REQUEST_CODE = 1001
     private val LAST_LOCATION = "last_location_while_uploading"
-    private val REQUEST_CODE_EDIT_DESCRIPTION = 1002
     private lateinit var fragment: MediaDetailFragment
     private lateinit var fragmentManager: FragmentManager
     private lateinit var layoutInflater: LayoutInflater
     private lateinit var view: View
     private lateinit var context: Context
-
-    private val NOMINATING_FOR_DELETION_MEDIA = "Nominating for deletion %s"
-
 
     @Mock
     private lateinit var deleteHelper: DeleteHelper
@@ -137,20 +135,25 @@ class MediaDetailFragmentUnitTests {
     private lateinit var listView: ListView
 
     @Mock
-    private lateinit var searchView: SearchView
-
-    @Mock
     private lateinit var intent: Intent
 
     private lateinit var activity: SearchActivity
+    
+    @Mock
+    private lateinit var mockContext: Context
+    
+    @Mock
+    private lateinit var mockSharedPreferences: SharedPreferences
+    
+    @Mock
+    private lateinit var mockSharedPreferencesEditor:  SharedPreferences.Editor
 
     @Before
     fun setUp() {
 
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
 
         context = ApplicationProvider.getApplicationContext()
-
         AppAdapter.set(TestAppAdapter())
 
         SoLoader.setInTestMode()
@@ -216,6 +219,10 @@ class MediaDetailFragmentUnitTests {
         val map = HashMap<String, String>()
         map[Locale.getDefault().language] = ""
         `when`(media.descriptions).thenReturn(map)
+
+        doReturn(mockSharedPreferences).`when`(mockContext).getSharedPreferences(anyString(), anyInt())
+        doReturn(mockSharedPreferencesEditor).`when`(mockSharedPreferences).edit()
+        doReturn(mockSharedPreferencesEditor).`when`(mockSharedPreferencesEditor).putInt(anyString(), anyInt())
     }
 
     @Test
@@ -309,6 +316,9 @@ class MediaDetailFragmentUnitTests {
     @Test
     @Throws(Exception::class)
     fun testOnResume() {
+        Whitebox.setInternalState(fragment, "applicationKvStore", applicationKvStore)
+        `when`(applicationKvStore.getBoolean("login_skipped")).thenReturn(true)
+        fragment.onCreateView(layoutInflater, null, savedInstanceState)
         fragment.onResume()
     }
 
@@ -808,5 +818,31 @@ class MediaDetailFragmentUnitTests {
         )
         method.isAccessible = true
         method.invoke(fragment, media)
+    }
+    
+    @Test
+    fun testOnImageBackgroundChangedWithDifferentColor() {
+        val spyFragment = spy(fragment)
+        val color = 0xffffff
+        doReturn(mockContext).`when`(spyFragment).context
+        doReturn(-1).`when`(mockSharedPreferences).getInt(anyString(), anyInt())
+
+        spyFragment.onImageBackgroundChanged(color)
+
+        verify(simpleDraweeView, times(1)).setBackgroundColor(color) 
+        verify(mockSharedPreferencesEditor, times(1)).putInt(anyString(), anyInt())
+    }
+
+
+    @Test
+    fun testOnImageBackgroundChangedWithSameColor() {
+        val spyFragment = spy(fragment)
+        val color = 0
+        doReturn(mockContext).`when`(spyFragment).context
+        doReturn(color).`when`(mockSharedPreferences).getInt(anyString(), anyInt())
+
+        spyFragment.onImageBackgroundChanged(color)
+        verify(simpleDraweeView, never()).setBackgroundColor(anyInt())
+        verify(mockSharedPreferencesEditor, never()).putInt(anyString(), anyInt())
     }
 }

@@ -10,6 +10,7 @@
 * Dr. Mohammed
 * FiberAhmed
 * Kassem7899
+* LaMagiaaa
 * Meno25
 * Mido
 * Monrokhoury
@@ -21,6 +22,7 @@
 * أَحمد
 * ترجمان05
 * ديفيد
+* علاء
 * محمد أحمد عبد الفتاح
 * مشعل الحربي
 -->
@@ -112,6 +114,7 @@
   <string name="bullet">•</string>
   <string name="menu_settings">الإعدادات</string>
   <string name="intent_share_upload_label">رفع إلى المشاعات</string>
+  <string name="upload_in_progress">جار الرفع</string>
   <string name="username">اسم المستخدم</string>
   <string name="password">كلمة السر</string>
   <string name="login_credential">سجل الدخول إلى حسابك في كومنز بيتا</string>
@@ -241,7 +244,6 @@
   <string name="location_permission_title">جارٍ طلب إذن الموقع</string>
   <string name="ok">موافق</string>
   <string name="warning">تحذير</string>
-  <string name="duplicate_image_found">تم العثور على صورة مكررة</string>
   <string name="upload">رفع</string>
   <string name="yes">نعم</string>
   <string name="no">لا</string>
@@ -370,7 +372,7 @@
   <string name="result">النتيجة</string>
   <string name="quiz_back_button">إذا استمر رفع الصور التي تتطلب الحذف، فمن المحتمل أن يتم من حسابك، هل أنت متأكد من أنك تريد إنهاء الاختبار؟</string>
   <string name="quiz_alert_message">تم حذف أكثر من %1$s من الصور التي رفعتها، إذا استمر تحميل الصور التي تتطلب الحذف، فمن المحتمل أن يتم منع حسابك. \n\nهل ترغب في مشاهدة البرنامج التعليمي مرة أخرى ومن ثم إجراء اختبار لمساعدتك في معرفة نوع الصور التي ينبغي أو لا ينبغي رفعا؟</string>
-  <string name="selfie_answer">الصور الشخصية ليست لها قيمة موسوعية كبيرة; يُرجَى عدم رفع صورة لنفسك ما لم تكن لديك بالفعل مقالة ويكيبيديا عنك.</string>
+  <string name="selfie_answer">الصور الشخصية ليس لها قيمة موسوعية كبيرة; يُرجَى عدم رفع صورة لنفسك ما لم تكن لديك بالفعل مقالة ويكيبيديا عنك.</string>
   <string name="taj_mahal_answer">من الأفضل رفع صور المعالم الأثرية والمناظر الخارجية في معظم البلدان، تُرجَى ملاحظة أن المنشآت الفنية المؤقتة بالخارج تكون محمية بحقوق الطبع والنشر في الغالب وليس مسموحا برفعها.</string>
   <string name="screenshot_answer">تُعتبَر لقطات شاشة المواقع الإلكترونية أعمالا مشتقة وتخضع لأي حقوق نشر على الموقع نفسه، ويمكن استخدامها بعد الحصول على إذن من المؤلف، بدون هذا الإذن، يُعتبَر أي فن تقوم بإنشائه بناءً على عملهم نسخة غير مرخصة من قبل المؤلف الأصلي.</string>
   <string name="blurry_image_answer">أحد أهداف كومنز جمع صور عالية الجودة، لذلك; لا يجب رفع صور باهتة; حاول دائما التقاط صور جميلة بإضاءة جيدة.</string>
@@ -464,6 +466,7 @@
   <string name="ends_on">ينتهي في:</string>
   <string name="display_campaigns">عرض الحملات</string>
   <string name="display_campaigns_explanation">انظر الحملات الجارية</string>
+  <string name="location_loss_warning" fuzzy="true">يرجى التأكد من أن منتقي أندرويد الجديد هذا لا يزيل الموقع من صورك.</string>
   <string name="nearby_campaign_dismiss_message">لن ترى الحملات بعد الآن، ومع ذلك، يمكنك إعادة تمكين هذا الإشعار في الإعدادات إذا كنت ترغب.</string>
   <string name="this_function_needs_network_connection">تتطلب هذه الوظيفة الاتصال بالشبكة; يُرجَى التحقق من إعدادات اتصالك.</string>
   <string name="error_processing_image">حدث خطأ أثناء معالجة الصورة. رجاءً حاول مرة أخرى!</string>
@@ -500,8 +503,8 @@
   <string name="no_image">لا صور مستخدمة</string>
   <string name="no_image_reverted">لم يتم إرجاع أية صور</string>
   <string name="no_image_uploaded">لا توجد صور مرفوعة</string>
-  <string name="no_notification">ليست لديك إشعارات غير مقروءة</string>
-  <string name="no_read_notification">ليست لديك إشعارات مقروءة</string>
+  <string name="no_notification">ليس لديك أي إشعارات غير مقروءة</string>
+  <string name="no_read_notification">ليس لديك أي إشعاراتٍ غير مقروءة</string>
   <string name="share_logs_using">مشاركة السجلات باستخدام</string>
   <string name="menu_option_read">عرض المقروءة</string>
   <string name="menu_option_unread">عرض غير المقروءة</string>
@@ -602,7 +605,7 @@
   <string name="title_for_child_classes">تصنيف الأطفال</string>
   <string name="title_for_parent_classes">تصنيف أولياء الأمور</string>
   <string name="upload_nearby_place_found_title">تم العثور على مكان قريب</string>
-  <string name="upload_nearby_place_found_description">هل هذه صورة للمكان %1$؟</string>
+  <string name="upload_nearby_place_found_description" fuzzy="true">هل هذه صورة للمكان %1$؟</string>
   <string name="title_app_shortcut_bookmark">العلامات</string>
   <string name="title_app_shortcut_setting">الإعدادات</string>
   <string name="remove_bookmark">أزل من العلامات</string>
@@ -659,7 +662,6 @@
   <string name="leaderboard_nearby">مجاور</string>
   <string name="leaderboard_used">مستخدَم</string>
   <string name="leaderboard_my_rank_button_text">ترتيبي</string>
-  <string name="map_attribution">&amp;#169; &lt;a href=\"https://www.mapbox.com/about/maps/\"&gt;Mapbox&lt;/a&gt; &amp;#169; &lt;a href=\"https://www.openstreetmap.org/copyright\"&gt;OpenStreetMap&lt;/a&gt; &lt;a href=\"https://www.mapbox.com/map-feedback/\"&gt;تحسين هذه الخريطة&lt;/a&gt;</string>
   <string name="limited_connection_enabled">وضع الاتصال المحدود مُمَكَّن!</string>
   <string name="limited_connection_disabled">وضع الاتصال المحدود مُعطل. سيجري استئناف التحميلات المعلقة الآن.</string>
   <string name="limited_connection_mode">وضع الاتصال المحدود</string>
@@ -722,9 +724,9 @@
   <string name="advanced_query_info_text">يمكنك تخصيص استعلام قريب. إذا حصلت على أخطاء ، قم بإعادة التعيين والتطبيق.</string>
   <string name="apply">تطبيق</string>
   <string name="reset">إعادة ضبط</string>
-  <string name="location_message">تساعد بيانات الموقع محرري Wiki في العثور على صورتك ، مما يجعلها أكثر فائدة.! N! لا يوجد موقع لعمليات التحميل الأخيرة.! N! نقترح عليك تشغيل الموقع في إعدادات تطبيق الكاميرا.</string>
+  <string name="location_message" fuzzy="true">تساعد بيانات الموقع محرري Wiki في العثور على صورتك ، مما يجعلها أكثر فائدة.! N! لا يوجد موقع لعمليات التحميل الأخيرة.! N! نقترح عليك تشغيل الموقع في إعدادات تطبيق الكاميرا.</string>
   <string name="no_location_found_title">لم يتم العثور على موقع</string>
-  <string name="no_location_found_message">ماذا عن إضافة المكان الذي تم التقاط هذه الصورة فيه؟! N! تساعد بيانات الموقع محرري Wiki في العثور على صورتك ، مما يجعلها أكثر فائدة.! N! شكرًا لك!</string>
+  <string name="no_location_found_message" fuzzy="true">ماذا عن إضافة المكان الذي تم التقاط هذه الصورة فيه؟! N! تساعد بيانات الموقع محرري Wiki في العثور على صورتك ، مما يجعلها أكثر فائدة.! N! شكرًا لك!</string>
   <string name="add_location">أضف الموقع</string>
   <string name="feedback_sharing_data_alert">يُرجى إزالة أي معلومات لا تشعر بالارتياح عند مشاركتها علنًا من هذا البريد الإلكتروني. أيضًا ، يرجى العلم أن عنوان بريدك الإلكتروني الذي تنشر به ، والاسم المرتبط وصورة الملف الشخصي ، سيكونان مرئيين للجمهور.</string>
   <string name="explore_map_details">التفاصيل</string>
@@ -758,5 +760,8 @@
   <string name="request_user_block">طلب منع هذا المستخدم</string>
   <string name="welcome_to_full_screen_mode_text">مرحبًا بك في وضع التحديد بملء الشاشة</string>
   <string name="full_screen_mode_zoom_info">استخدم إصبعين للتكبير والتصغير.</string>
-  <string name="full_screen_mode_features_info">مرر سريعًا وطويلًا لتنفيذ هذه الإجراءات:! N! - يسار / يمين: انتقل إلى السابق / التالي! N! - لأعلى: حدد! N! - أسفل: وضع علامة على أنه ليس للتحميل.</string>
+  <string name="full_screen_mode_features_info" fuzzy="true">مرر سريعًا وطويلًا لتنفيذ هذه الإجراءات:! N! - يسار / يمين: انتقل إلى السابق / التالي! N! - لأعلى: حدد! N! - أسفل: وضع علامة على أنه ليس للتحميل.</string>
+  <string name="storage_permissions_denied">رُفض إذن التخزين</string>
+  <string name="unable_to_share_upload_item">تعذر مشاركة هذا العنصر</string>
+  <string name="permissions_are_required_for_functionality">الإذن مطلوب لهذه الوظيفة</string>
 </resources>
